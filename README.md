@@ -7,3 +7,10 @@ Truffle v5.0.4 (core: 5.0.4)
 Solidity v0.5.0 (solc-js)
 Node v10.15.1
 ```
+
+## options
+```
+truffle compile
+truffle migrate
+truffle test
+```

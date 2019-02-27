@@ -1,4 +1,5 @@
 pragma solidity ^0.5.0;
+//pragma experimental ABIEncoderV2;
 
 contract Algorithm {
     function factorial(int x) public pure returns(int){
@@ -23,5 +24,40 @@ contract Algorithm {
             }
         }
         return arr;
+    }
+
+    function testUnit() public view returns(address t){
+        matrixMulti();
+        address addr = msg.sender;
+        return addr;
+    }
+
+    //矩阵相乘，取结果所有元素的和
+    function matrixMulti() public pure returns(uint){
+        uint8[3][3] memory  m1 = [[1,2,3],[1,2,3],[1,2,3]]; //矩阵可随意定义
+        uint8[3][3] memory m2 = [[1,2,3],[1,2,3],[1,2,3]];
+        uint m1_raw = m1.length;
+        uint m1_column = m1[0].length;
+        uint m2_raw = m2.length;
+        uint m2_column = m2[0].length;
+        uint SUM = 0;
+        if(m1_column != m2_raw || m1_raw != m2_column){
+            revert();
+        }
+        for(uint i = 0; i < m1_raw; i++){
+            for(uint j = 0; j < m2_column; j++){
+                uint sum = 0;
+                for(uint k = 0; k < m2_raw; k++){
+                    sum += m1[i][k] * m2[k][j];
+                }
+                SUM += sum;
+            }
+        }
+        return SUM;
+    }
+
+    function linearRegression(int[] memory x, int[] memory y) public pure returns(int[] memory parameter){
+
+        return parameter;
     }
 }

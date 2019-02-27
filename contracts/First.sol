@@ -1,7 +1,7 @@
 pragma solidity >=0.4.21 <0.6.0;
 
 contract First{
-    function show() public returns (string memory) {
+    function show() public pure returns (string memory) {
         return ("Hello World!");
       }
 

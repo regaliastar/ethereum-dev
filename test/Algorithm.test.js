@@ -22,6 +22,30 @@ contract('Algorithm', accounts => {
             const v_str = value.toString()
             assert.equal(arr_str, v_str, 'selectSort function error!')
         })
-    });
+    })
+
+    it('matrixMulti', function () {
+        const m1 = [[1,1],[1,1]]
+        const m2 = [[1,1],[1,1]]
+        return Algorithm.deployed().then(instance => {
+            const meta = instance
+            return meta.matrixMulti.call()
+        }).then(value => {
+            // const expectValue = [[6,12,18],[6,12,18],[6,12,18]].toString()
+            const expectValue = 108
+            assert.equal(expectValue.toString(), value.toString(), 'matrixMulti function error!')
+        })
+    })
+
+    it('testUnit', function () {
+        const m1 = [[1,1],[1,1]]
+        const m2 = [[1,1],[1,1]]
+        return Algorithm.deployed().then(instance => {
+            const meta = instance
+            return meta.testUnit.call()
+        }).then(value => {
+            assert.equal(accounts[0], value, 'matrixMulti function error!')
+        })
+    })
 
 })
