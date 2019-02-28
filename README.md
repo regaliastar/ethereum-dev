@@ -13,4 +13,8 @@ Node v10.15.1
 truffle compile
 truffle migrate
 truffle test
+truffle unbox
 ```
+
+## tips
+先`truffle networks clean`再`truffle migrate`可重新部署合约

@@ -1,0 +1,47 @@
+<html>
+<head>
+    <title>web3-test</title>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+</head>
+<script>
+    function connect() {
+        //默认http://localhost:7545
+        let  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+        if(!web3.isConnected()) {
+            console.log("连接失败！！")
+        } else {
+            console.log("连接成功！！")
+        }
+        return web3
+    }
+    
+    function initInstance(web3) {
+        const contractAddress = '0xfCD5316c595373388e5F160f1A27f1D54C7ce61b'
+        // JSON压缩 http://www.bejson.com/zhuanyi/
+        const contractABI = [{"constant":true,"inputs":[],"name":"nodeNumber","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"organizer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"Nodes","outputs":[{"name":"addr","type":"address"},{"name":"ability","type":"uint256"},{"name":"available","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"constant":true,"inputs":[{"name":"addr","type":"address"}],"name":"showNode","outputs":[{"name":"","type":"address"},{"name":"","type":"uint256"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"connect","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"disconnect","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]
+        const contractInstance = web3.eth.contract(contractABI).at(contractAddress)
+        return contractInstance
+    }
+    
+    function consoleNodeNumber(contractInstance) {
+        const nodeNumber = contractInstance.nodeNumber.call()
+        console.log("nodeNumber: "+nodeNumber)
+    }
+
+</script>
+<script>
+    const web3 = connect()
+
+    //将第一个账户作为默认账户
+    web3.eth.defaultAccount = web3.eth.accounts[0]
+    const contractInstance = initInstance(web3)
+    consoleNodeNumber(contractInstance)
+    contractInstance.connect(web3.eth.accounts[1])
+    consoleNodeNumber(contractInstance)
+    let node = contractInstance.showNode(web3.eth.accounts[1])
+    contractInstance.disconnect(web3.eth.accounts[1])
+    consoleNodeNumber(contractInstance)
+    node = contractInstance.showNode(web3.eth.accounts[1])
+    console.log(JSON.stringify(node))
+</script>
+</html>

@@ -10,7 +10,7 @@ contract Main {
         uint ability;   //算力
         bool available; //当前是否可用, 值:true——当前可用, false——当前不可用
     }
-    Participant[] Nodes;
+    Participant[] public Nodes;
 
     constructor() public {
         organizer = msg.sender;
@@ -19,34 +19,42 @@ contract Main {
         Nodes.push(_participant);
     }
 
-    function showNode(address addr) public returns(address, uint, bool){
+    function showNode(address addr) public view returns(address, uint, bool){
         uint length = Nodes.length;
+        bool flag = false;
         Participant memory node;
         for(uint i = 0; i < length; i++){
             if(Nodes[i].addr == addr){
                 node = Nodes[i];
+                flag = true;
             }
         }
+//        require(flag);
         return (node.addr, node.ability, node.available);
     }
 
-    function join() public returns(bool){   // solidity不支持返回结构体数组和结构体
-        require(msg.sender != organizer, "organizer cannot join!");
-        nodeNumber++;
-        Participant memory _participant = Participant(msg.sender, 0, true);
-        Nodes.push(_participant);
-        return true;
-    }
-
-    function quit(address addr) public returns(bool){
+    function connect(address addr) public{   // solidity不支持返回结构体数组和结构体
+        require(addr != organizer, "organizer cannot join!");
+        Participant memory _participant = Participant(addr, 0, true);
         uint length = Nodes.length;
         for(uint i = 0; i < length; i++){
             if(Nodes[i].addr == addr){
-                Nodes[i].available = false;
+                return;
             }
         }
-        nodeNumber--;
-        return true;
+        Nodes.push(_participant);
+        nodeNumber = Nodes.length;
+    }
+
+    function disconnect(address addr) public{
+        uint length = Nodes.length;
+        for(uint i = 0; i < length; i++){
+            if(Nodes[i].addr == addr){
+                Nodes[i] = Nodes[length-1];
+                Nodes.pop();
+            }
+        }
+        nodeNumber = Nodes.length;
     }
 
 }
