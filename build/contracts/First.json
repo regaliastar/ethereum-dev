@@ -673,12 +673,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x3f08cDd272F7Ef13a5C5105a8a7a681Be335db54",
-      "transactionHash": "0x166e123d1dc924111599c119414e1412cd56dcd46a4674a10523cff82f338675"
+      "address": "0xB6244c4586a1c7544c6FD0a990305463c5E7127C",
+      "transactionHash": "0x69db92e7ba7ef3399965987013b8d82288f0fac9728d93f97b9e6861317588f2"
     }
   },
   "schemaVersion": "3.0.2",
-  "updatedAt": "2019-02-28T07:28:35.236Z",
+  "updatedAt": "2019-02-28T10:36:18.190Z",
   "devdoc": {
     "methods": {}
   },

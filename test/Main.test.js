@@ -41,9 +41,8 @@ contract("Main", accounts => {
         })
     })
     
-    it("test other accounts use BlockChain", function () {
-        // const MainAddress =
-        const abi = [{"constant":true,"inputs":[],"name":"nodeNumber","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"organizer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"constant":false,"inputs":[],"name":"join","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"quit","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"}]
+    it("test Event", async function () {
+        let meta = null
 
     })
 

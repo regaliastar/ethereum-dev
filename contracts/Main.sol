@@ -11,6 +11,8 @@ contract Main {
         bool available; //当前是否可用, 值:true——当前可用, false——当前不可用
     }
     Participant[] public Nodes;
+    event testTask(address addr, uint x);   //计算x个元素的选择排序消耗的时间
+    event execMatrixMulitTask(address addr, uint[3] x, uint[3] y);
 
     constructor() public {
         organizer = msg.sender;
@@ -44,6 +46,8 @@ contract Main {
         }
         Nodes.push(_participant);
         nodeNumber = Nodes.length;
+        //发射事件测试算力
+        emit testTask(msg.sender, 10000);
     }
 
     function disconnect(address addr) public{
@@ -55,6 +59,15 @@ contract Main {
             }
         }
         nodeNumber = Nodes.length;
+    }
+
+    function setAbility(uint ability) public{
+        uint length = Nodes.length;
+        for(uint i = 0; i < length; i++){
+            if(Nodes[i].addr == msg.sender){
+                Nodes[i].ability = ability;
+            }
+        }
     }
 
 }
