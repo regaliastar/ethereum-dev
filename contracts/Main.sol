@@ -41,13 +41,14 @@ contract Main {
         uint length = Nodes.length;
         for(uint i = 0; i < length; i++){
             if(Nodes[i].addr == addr){
+                emit testTask(addr, 10000);
                 return;
             }
         }
         Nodes.push(_participant);
         nodeNumber = Nodes.length;
         //发射事件测试算力
-        emit testTask(msg.sender, 10000);
+        emit testTask(addr, 10000);
     }
 
     function disconnect(address addr) public{

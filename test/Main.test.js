@@ -41,9 +41,18 @@ contract("Main", accounts => {
         })
     })
     
-    it("test Event", async function () {
+    it("test Event", function () {
         let meta = null
-
+        const participant_1 = accounts[1]
+        return Main.deployed().then(instance => {
+            meta = instance
+            return meta.connect(participant_1)
+        }).then(event => {
+            //event.receipt.logs.args 传递的数
+            const args = event.logs[0].args
+            console.log(args.x.toString())
+            assert.equal(args.x, 10000, "test Event Error!")
+        })
     })
 
 })
