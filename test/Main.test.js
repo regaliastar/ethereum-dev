@@ -1,4 +1,5 @@
 const Main = artifacts.require("./Main.sol")
+const Web3 = require('web3')
 
 contract("Main", accounts => {
     it("initial constructor", function () {
@@ -20,23 +21,24 @@ contract("Main", accounts => {
     it("connect and disconnect", function () {
         let meta = null
         const participant_1 = accounts[1]
+        const organizer = accounts[0]
         return Main.deployed().then(instance => {
             meta = instance
-            return meta.connect(participant_1) //call函数只读，不能修改存储的值
+            return meta.connect() //call函数只读，不能修改存储的值
         }).then(async response => {
             const nodeNumber = await meta.nodeNumber.call()
-            assert.equal(2, nodeNumber, "disconnect error!")
-            return meta.showNode.call(participant_1)
+            assert.equal(1, nodeNumber, "disconnect error!")
+            return meta.showNode.call(organizer)
         }).then(response => {
             assert.equal(true, response[2], "connect error!")
             assert.equal(0, response[1], "connect error!")
-            assert.equal(participant_1, response[0], "connect error!")
+            assert.equal(organizer, response[0], "connect error!")
 
-            return meta.disconnect(participant_1)
+            return meta.disconnect(organizer)
         }).then(async response => {
             const nodeNumber = await meta.nodeNumber.call()
             const node = await meta.showNode.call(participant_1)
-            assert.equal(1, nodeNumber, "disconnect error!")
+            assert.equal(0, nodeNumber, "disconnect error!")
             assert.equal(node[0], 0x0000000000000000000000000000000000000000, "disconnect error!")
         })
     })
@@ -44,45 +46,53 @@ contract("Main", accounts => {
     it("test Event", function () {
         let meta = null
         const participant_1 = accounts[1]
+        const organizer = accounts[0]
         return Main.deployed().then(instance => {
             meta = instance
-            return meta.connect(participant_1)
+            return meta.connect()
         }).then(event => {
             //event.receipt.logs.args 传递的数
+            meta.disconnect(organizer)
             const args = event.logs[0].args
-            console.log(args.x.toString())
             assert.equal(args.x, 10000, "test Event Error!")
         })
     })
 
+    it("test participants connect Event and set ability", function () {
+        function testTaskCallback(result) {
+            // 计算函数执行时间并返回结果
+            const _v = result
+            let arr = []
+            const begin = new Date()
+            for(let i = 0; i < _v; i++){
+                arr.push(Math.random())
+            }
+            arr.sort()
+            const end = new Date()
+            return end - begin
+        }
+        const participant_1 = accounts[1]
+        let meta = null
+        return Main.deployed().then(instance => {
+            meta = instance
+            return meta.connect({from: participant_1})
+        }).then( async event => {
+            // 测试participant_1成功connect并接收事件
+            const args = event.logs[0].args
+            const nodeNumber = await meta.nodeNumber.call()
+            assert.equal(1, nodeNumber, "connect error!")
+            const node = await meta.showNode.call(participant_1)
+            assert.equal(node[0], participant_1, "connect error!")
+            // 测试设置ability
+            const ability = testTaskCallback(args.x)
+            meta.setAbility(ability, {from: participant_1})
+            const node_1 = await meta.showNode.call(participant_1)
+            assert.notEqual(0, node_1[1], "connect error!")
+            // console.log(JSON.stringify(node_1))
+            meta.disconnect(participant_1)
+        })
+    })
+
+
 })
 
-
-/*
-var account_one = "0x1234..."; // 一个地址
-var account_two = "0xabcd..."; // 另一个地址
-
-var meta;
-MetaCoin.deployed().then(function(instance) {
-  meta = instance;
-  return meta.sendCoin(account_two, 10, {from: account_one});
-}).then(function(result) {
-  // 结果是一个具有以下值的对象：
-  //
-  // result.tx      => 交易的哈希，字符串。
-  // result.logs    => 在此交易中触发的解码事件数组。
-  // result.receipt => 交易接受的对象，包括花费的gas。
-
-  // 我们可以对结果进行循环。查看是否触发了传输事件。
-  for (var i = 0; i < result.logs.length; i++) {
-    var log = result.logs[i];
-
-    if (log.event == "Transfer") {
-      // 我们发现了事件！
-      break;
-    }
-  }
-}).catch(function(err) {
-  // 有一个错误！需要处理。
-});
-* */

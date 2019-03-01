@@ -59,7 +59,8 @@
 
     contractInstance.disconnect(web3.eth.defaultAccount)
     consoleNodeNumber(contractInstance)
-    contractInstance.connect(web3.eth.defaultAccount)
+    const e = contractInstance.connect(web3.eth.defaultAccount)
+    console.log(JSON.stringify(e))
     consoleNodeNumber(contractInstance)
     //监听测试任务事件
     const contractEvent = contractInstance.testTask()

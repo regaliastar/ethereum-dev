@@ -8,7 +8,7 @@ contract Main {
     struct Participant {
         address addr;
         uint ability;   //算力
-        bool available; //当前是否可用, 值:true——当前可用, false——当前不可用
+        bool available; //当前是否可用, 值:true——当前可用(已经处理完了工作), false——当前不可用
     }
     Participant[] public Nodes;
     event testTask(address addr, uint x);   //计算x个元素的选择排序消耗的时间
@@ -35,20 +35,20 @@ contract Main {
         return (node.addr, node.ability, node.available);
     }
 
-    function connect(address addr) public{   // solidity不支持返回结构体数组和结构体
-        require(addr != organizer, "organizer cannot join!");
-        Participant memory _participant = Participant(addr, 0, true);
+    function connect() public{   // solidity不支持返回结构体数组和结构体
+//        require(addr != organizer, "organizer cannot join!");
+        Participant memory _participant = Participant(msg.sender, 0, true);
         uint length = Nodes.length;
         for(uint i = 0; i < length; i++){
-            if(Nodes[i].addr == addr){
-                emit testTask(addr, 10000);
+            if(Nodes[i].addr == msg.sender){
+                emit testTask(msg.sender, 10000);
                 return;
             }
         }
         Nodes.push(_participant);
         nodeNumber = Nodes.length;
         //发射事件测试算力
-        emit testTask(addr, 10000);
+        emit testTask(msg.sender, 10000);
     }
 
     function disconnect(address addr) public{

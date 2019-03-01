@@ -39,7 +39,12 @@ module.exports = {
     development: {
       host: 'localhost',
       port: '7545',
-      network_id: '*' // Match any network id
+      network_id: '*', // Match any network id
+
+      websockets: true // Enable EventEmitter interface for web3 (default: false)
+    },
+    advanced: {
+      websockets: true
     }
 
     // Useful for testing. The `development` name is special - truffle uses it by default

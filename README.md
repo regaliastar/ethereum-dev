@@ -12,6 +12,7 @@ Node v10.15.1
 ```
 truffle compile
 truffle migrate
+truffle migrate --reset 重新部署
 truffle test
 truffle unbox
 ```
