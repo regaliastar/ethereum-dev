@@ -18,4 +18,4 @@ truffle unbox
 ```
 
 ## tips
-先`truffle networks --clean`再`truffle migrate`可重新部署合约
+`truffle migrate --reset`可重新部署合约

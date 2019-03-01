@@ -17,8 +17,6 @@ contract Main {
     constructor() public {
         organizer = msg.sender;
         nodeNumber = 1;
-        Participant memory _participant = Participant(msg.sender, 0, true);
-        Nodes.push(_participant);
     }
 
     function showNode(address addr) public view returns(address, uint, bool){
@@ -41,7 +39,7 @@ contract Main {
         uint length = Nodes.length;
         for(uint i = 0; i < length; i++){
             if(Nodes[i].addr == msg.sender){
-                emit testTask(msg.sender, 10000);
+                emit testTask(msg.sender, 9999);
                 return;
             }
         }

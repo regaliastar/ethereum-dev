@@ -1,5 +1,4 @@
 const Main = artifacts.require("./Main.sol")
-const Web3 = require('web3')
 
 contract("Main", accounts => {
     it("initial constructor", function () {
@@ -10,11 +9,6 @@ contract("Main", accounts => {
             return meta.nodeNumber.call()
         }).then(response => {
             assert.equal(1, response, "initial constructor error!")
-            return meta.showNode.call(organizer)
-        }).then(response => {
-            assert.equal(true, response[2], "initial constructor error!")
-            assert.equal(0, response[1], "initial constructor error!")
-            assert.equal(organizer, response[0], "initial constructor error!")
         })
     })
 
