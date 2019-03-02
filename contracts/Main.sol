@@ -8,6 +8,7 @@ contract Main {
     uint public totalTaskNumber;    // 需要完成的任务数量
     uint public successTaskNumber;  // 当前完成任务数量
     uint public finalMatrixSum;     // 矩阵计算完毕后的和
+    uint public matrixLength;       // 设置矩阵长度
     struct Participant {
         address addr;
         uint ability;   // 算力
@@ -22,7 +23,8 @@ contract Main {
         organizer = msg.sender;
         nodeNumber = 1;
         successTaskNumber = 0;
-        totalTaskNumber = 100;
+        matrixLength = 30;  // 通过改设置改变矩阵长度
+        totalTaskNumber = matrixLength * matrixLength;
         finalMatrixSum = 0;
     }
 
@@ -41,9 +43,7 @@ contract Main {
         //一次性分配
         uint[] memory ability = direct_distribute(totalTaskNumber);
         uint unitLoad = getLoadByAddress(ability, sender);  // 被分配的工作量
-//        uint[10] memory x = [uint(1),1,1,1,1,1,1,1,1,1];    //10个元素
-//        uint[10] memory y = [uint(1),1,1,1,1,1,1,1,1,1];    //10个元素
-        uint Length = 10;
+        uint Length = matrixLength;
         uint[] memory x = new uint[](Length);
         uint[] memory y = new uint[](Length);
         uint[] memory result = new uint[](unitLoad);
@@ -86,6 +86,10 @@ contract Main {
     /*
       计算分配任务问题，算法一：
       一次性分配
+      100  个任务 耗时 1391  ms
+      900  个任务 耗时 5895  ms
+      2500 个任务 耗时 15742 ms
+      10000个任务 out of gas
     */
     function direct_distribute(uint totalTaskNum) public returns(uint[] memory){
         Algorithm algo = new Algorithm();

@@ -77,13 +77,14 @@ contract("Main.basic", accounts => {
     after("afterAll", function () {
 
     })
-
+    const matrixLength = 30
     it("test direct_distribute function",async function () {
-        const totalTaskNum = 100
+        const totalTaskNum = matrixLength * matrixLength
         const ability = await meta.direct_distribute.call(totalTaskNum)
         let sum = 0
         for(let i = 0; i < ability.length; i++){
             sum += ability[i].toNumber()
+            console.log('分配'+i+': '+ability[i].toNumber())
         }
         assert.equal(sum, totalTaskNum, "direct_distribute error!")
     })
@@ -97,7 +98,8 @@ contract("Main.basic", accounts => {
         const finalMatrixSum = await meta.finalMatrixSum.call()
         console.log("finalMatrixSum: "+finalMatrixSum)
         const successTaskNumber = await meta.successTaskNumber.call()
-        assert.equal(successTaskNumber, 100, 'successTaskNumber error!')
+        const excepted = matrixLength*matrixLength
+        assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
     })
     
     it("test not distribute cost time", async function () {
