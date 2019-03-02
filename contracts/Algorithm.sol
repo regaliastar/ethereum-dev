@@ -1,7 +1,29 @@
 pragma solidity ^0.5.0;
-//pragma experimental ABIEncoderV2;
+
+import './Utils.sol';
 
 contract Algorithm {
+    function countNGcd(uint[] memory ability, uint length) public returns(uint){
+        Utils utils = new Utils();
+        if(length == 1){
+            return ability[0];
+        }
+        uint c = utils.gcd(ability[0], ability[1]);
+        for(uint i = 2; i < length; i++){
+            c = utils.gcd(c, ability[i]);
+        }
+        return c;
+    }
+
+    function getMk(uint k, uint x) public returns(uint){
+        for(uint i = k; i <= x; i++){
+            if(x % i == 0){
+                return i;
+            }
+        }
+        return 0;
+    }
+
     function factorial(int x) public pure returns(int){
         int value = 1;
         if(x == 0){

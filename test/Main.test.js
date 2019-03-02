@@ -86,6 +86,13 @@ contract("Main", accounts => {
             meta.disconnect(participant_1)
         })
     })
+    
+    it("test event listener", function () {
+        let meta = null
+        const participant_1 = accounts[1]
+        const organizer = accounts[0]
+
+    })
 
 
 })

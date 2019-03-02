@@ -51,8 +51,10 @@ contract("Main.basic", accounts => {
             })
     }
 
+
     it("distribute testTask for nodes", function () {
         let meta = null
+        const totalTaskNum = 100
         return Main.deployed().then(instance => {
             meta = instance
             //开始连接
@@ -62,11 +64,26 @@ contract("Main.basic", accounts => {
             const p3 = testTaskUnit(meta, participant_3)
             return Promise.all([p0, p1, p2, p3])
         }).then(response => {
-            console.log(response)
+            // console.log(response)
             return  meta.nodeNumber.call()
         }).then(nodeNumber => {
             assert.equal(4, nodeNumber, "connect error!")
-            console.log('nodeNumber:'+nodeNumber)
+            return meta.getAbility.call()
+        }).then(ability => {
+            for(let i = 0; i < ability.length; i++){
+                console.log(ability[i].toNumber())
+            }
+            console.log("-------------")
+            // 开始执行计算任务
+            return meta.direct_distribute.call(totalTaskNum)
+        }).then(ability => {
+            let sum = 0
+            for(let i = 0; i < ability.length; i++){
+                sum += ability[i].toNumber()
+                console.log(ability[i].toNumber())
+            }
+            console.log('sum: '+sum)
+            assert.equal(sum, totalTaskNum, "direct_distribute error!")
         })
     })
 })

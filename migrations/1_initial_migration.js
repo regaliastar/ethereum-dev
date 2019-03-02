@@ -10,4 +10,5 @@ module.exports = function(deployer) {
   deployer.deploy(Conference);
   deployer.deploy(Algorithm);
   deployer.deploy(Main);
+
 };
