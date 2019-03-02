@@ -4,7 +4,10 @@ import './Algorithm.sol';
 
 contract Main {
     address public organizer;
-    uint public nodeNumber; // 当前可用节点数
+    uint public nodeNumber;         // 当前可用节点数
+    uint public totalTaskNumber;    // 需要完成的任务数量
+    uint public successTaskNumber;  // 当前完成任务数量
+    uint public finalMatrixSum;     // 矩阵计算完毕后的和
     struct Participant {
         address addr;
         uint ability;   // 算力
@@ -18,15 +21,71 @@ contract Main {
         // 初始化
         organizer = msg.sender;
         nodeNumber = 1;
+        successTaskNumber = 0;
+        totalTaskNumber = 100;
+        finalMatrixSum = 0;
     }
 
-    function distributeManager() public{
-        //一次性分配
+    function execUnit(uint[] memory x, uint[] memory y, uint length) private returns(uint){
+        require(length > 0);
+        uint sum = 0;
+        for(uint i = 0; i < length; i++){
+            uint r = x[i]*y[i];
+            sum = sum + r;
+        }
+        return sum;
+    }
 
+    // 根据 msg.sender 来分配任务，将执行结果返回给调用者
+    function matrixMulitexecWork(address sender) public returns(uint[] memory) {
+        //一次性分配
+        uint[] memory ability = direct_distribute(totalTaskNumber);
+        uint unitLoad = getLoadByAddress(ability, sender);  // 被分配的工作量
+//        uint[10] memory x = [uint(1),1,1,1,1,1,1,1,1,1];    //10个元素
+//        uint[10] memory y = [uint(1),1,1,1,1,1,1,1,1,1];    //10个元素
+        uint Length = 10;
+        uint[] memory x = new uint[](Length);
+        uint[] memory y = new uint[](Length);
+        uint[] memory result = new uint[](unitLoad);
+        for(uint i = 0; i < Length; i++){
+            x[i] = 1;
+            y[i] = 1;
+        }
+        uint sum = 0;
+        for(uint i = 0; i < unitLoad; i++){
+            uint r = execUnit(x, y, 10);
+            sum = sum + r;
+            result[i] = r;
+        }
+        successTaskNumber = successTaskNumber + unitLoad;
+        finalMatrixSum = finalMatrixSum + sum;
+        return result;
+    }
+
+    /*
+        判断任务是否完成，并返回结果
+    */
+    function matrixMulitexecManager() public returns(uint){
+        uint[] memory result = matrixMulitexecWork(msg.sender);
+        //若任务执行完毕
+        if(successTaskNumber == totalTaskNumber){
+            return finalMatrixSum;
+        }
+        //任务还在继续
+        return 0;
+    }
+
+    function getLoadByAddress(uint[] memory ability, address addr) private returns(uint){
+        uint Length = nodeNumber;
+        for(uint i = 0; i < Length; i++){
+            if(Nodes[i].addr == addr){
+                return ability[i];
+            }
+        }
     }
     /*
-      计算分配任务问题，解法一：
-      一次性分配，整数线性规划
+      计算分配任务问题，算法一：
+      一次性分配
     */
     function direct_distribute(uint totalTaskNum) public returns(uint[] memory){
         Algorithm algo = new Algorithm();
@@ -39,7 +98,6 @@ contract Main {
                 maxIndex = i;
             }
         }
-
         //先化简ability比例为 最简整数比
         uint GCD = algo.countNGcd(ability, Length);
         uint K = 0;
@@ -102,7 +160,7 @@ contract Main {
         uint length = Nodes.length;
         for(uint i = 0; i < length; i++){
             if(Nodes[i].addr == msg.sender){
-                emit testTask(9999);
+                emit testTask(10000);
                 return;
             }
         }
