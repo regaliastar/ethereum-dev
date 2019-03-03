@@ -3,6 +3,7 @@ pragma solidity ^0.5.0;
 import './Utils.sol';
 
 contract Algorithm {
+    // 计算 N 个数的最大公约数
     function countNGcd(uint[] memory ability, uint length) public returns(uint){
         Utils utils = new Utils();
         if(length == 1){
@@ -15,13 +16,24 @@ contract Algorithm {
         return c;
     }
 
-    function getMk(uint k, uint x) public returns(uint){
+    function getMk(uint k, uint x) public pure returns(uint){
         for(uint i = k; i <= x; i++){
             if(x % i == 0){
                 return i;
             }
         }
         return 0;
+    }
+
+    // 计算向量 x,y 乘积并取和
+    function execUnit(uint[] memory x, uint[] memory y, uint length) public pure returns(uint){
+        require(length > 0);
+        uint sum = 0;
+        for(uint i = 0; i < length; i++){
+            uint r = x[i]*y[i];
+            sum = sum + r;
+        }
+        return sum;
     }
 
     function factorial(int x) public pure returns(int){
@@ -77,9 +89,10 @@ contract Algorithm {
         }
         return SUM;
     }
-
+    /*
     function linearRegression(int[] memory x, int[] memory y) public pure returns(int[] memory parameter){
 
         return parameter;
     }
+    */
 }

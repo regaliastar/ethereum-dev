@@ -46,12 +46,16 @@ contract("Main.basic", accounts => {
                 return node
             })
     }
-    function testMatrixMulitexecManager(meta, address) {
+    function test_direct_distribute_manager(meta, address) {
         return Promise.resolve()
             .then(() => {
-                return meta.matrixMulitexecManager({from: address})
-            }).then(result => {
-                // console.log(result)
+                return meta.direct_distribute_manager({from: address})
+            })
+    }
+    function test_loop_distribute_manager(meta, address) {
+        return Promise.resolve()
+            .then(() => {
+                return meta.loop_distribute_manager({from: address})
             })
     }
 
@@ -73,11 +77,14 @@ contract("Main.basic", accounts => {
             return Promise.all([p0, p1, p2, p3])
         })
     })
-    
-    after("afterAll", function () {
 
+    // 销毁合约
+    after("afterAll", function () {
+        meta.kill({from: organizer})
     })
-    const matrixLength = 30
+
+    const matrixLength = 10
+
     it("test direct_distribute function",async function () {
         const totalTaskNum = matrixLength * matrixLength
         const ability = await meta.direct_distribute.call(totalTaskNum)
@@ -89,11 +96,23 @@ contract("Main.basic", accounts => {
         assert.equal(sum, totalTaskNum, "direct_distribute error!")
     })
 
-    it("test matrixMulitManager function", async function () {
-        const task0 = testMatrixMulitexecManager(meta, organizer)
-        const task1 = testMatrixMulitexecManager(meta, participant_1)
-        const task2 = testMatrixMulitexecManager(meta, participant_2)
-        const task3 = testMatrixMulitexecManager(meta, participant_3)
+    it("test loop_distribute function",async function () {
+        console.log("------------------")
+        const totalTaskNum = matrixLength * matrixLength
+        const ability = await meta.loop_distribute.call(totalTaskNum)
+        let sum = 0
+        for(let i = 0; i < ability.length; i++){
+            sum += ability[i].toNumber()
+            console.log('分配'+i+': '+ability[i].toNumber())
+        }
+        assert.equal(sum, totalTaskNum, "direct_distribute error!")
+    })
+/*
+    it("test test_direct_distribute_manager function", async function () {
+        const task0 = test_direct_distribute_manager(meta, organizer)
+        const task1 = test_direct_distribute_manager(meta, participant_1)
+        const task2 = test_direct_distribute_manager(meta, participant_2)
+        const task3 = test_direct_distribute_manager(meta, participant_3)
         await Promise.all([task0, task1, task2, task3])
         const finalMatrixSum = await meta.finalMatrixSum.call()
         console.log("finalMatrixSum: "+finalMatrixSum)
@@ -101,8 +120,22 @@ contract("Main.basic", accounts => {
         const excepted = matrixLength*matrixLength
         assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
     })
-    
-    it("test not distribute cost time", async function () {
+*/
+    it("test loop_distribute_manager function", async function () {
+        // init
+        await meta.init();
+
+        const task0 = test_loop_distribute_manager(meta, organizer)
+        const task1 = test_loop_distribute_manager(meta, participant_1)
+        const task2 = test_loop_distribute_manager(meta, participant_2)
+        const task3 = test_loop_distribute_manager(meta, participant_3)
+        await Promise.all([task0, task1, task2, task3])
+        const finalMatrixSum = await meta.finalMatrixSum.call()
+        console.log("finalMatrixSum: "+finalMatrixSum)
+        const successTaskNumber = await meta.successTaskNumber.call()
+        console.log('successTaskNumber: '+successTaskNumber.toNumber())
+        const excepted = matrixLength*matrixLength
+        assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
 
     })
 
