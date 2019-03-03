@@ -21,7 +21,7 @@ contract Main {
         // 初始化
         organizer = msg.sender;
         nodeNumber = 1;
-        matrixLength = 20;  // 通过手动设置改变矩阵长度
+        matrixLength = 30;  // 通过手动设置改变矩阵长度
         totalTaskNumber = matrixLength * matrixLength;
         successTaskNumber = 0;
         finalMatrixSum = 0;
@@ -58,6 +58,21 @@ contract Main {
             sum = sum + r;
             result[i] = r;
         }
+        return sum;
+    }
+
+    /*
+        调用算法0： 不进行分布式计算，用作对照组
+        只有 organizer 可以调用
+    */
+    function no_distribute_manager() public returns(uint){
+        require(msg.sender == organizer);
+        uint unitLoad = totalTaskNumber;
+        uint sum = matrixMulitexecWork(unitLoad, matrixLength);
+        // 更新 finalMatrixSum
+        finalMatrixSum = finalMatrixSum + sum;
+        // 更新 successTaskNumber
+        successTaskNumber = successTaskNumber + unitLoad;
         return sum;
     }
 
@@ -132,10 +147,8 @@ contract Main {
         @returns uint[] memory - 分配得到的任务数
     */
     function loop_distribute_without_testTask_manager() public returns(uint){
-        uint Length = nodeNumber;
-        uint[] memory ability = new uint[](Length);
         // 设置每个节点一次执行50个任务
-        uint unitLoad = 50;
+        uint unitLoad = 20;
         uint task_remained = totalTaskNumber - successTaskNumber;
         while(true){
             if(successTaskNumber >= totalTaskNumber){

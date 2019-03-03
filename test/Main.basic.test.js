@@ -1,20 +1,6 @@
 const Main = artifacts.require("./Main.sol")
 
 contract("Main.basic", accounts => {
-    function disconnectAll(){
-        const args = Array.prototype.slice.apply(arguments)
-        const meta =args.pop()
-        console.log('length:'+args.length)
-        const arr = args.map(addr => {
-            return Promise.resolve()
-                .then(() => {
-                    return meta.disconnect(addr, {from: addr})
-                }).then(v => {
-                    return v
-                })
-        })
-        return Promise.all(arr)
-    }
     function countAbilty(result) {
         // 快速排序算法计算
         // 计算函数执行时间并返回结果
@@ -95,9 +81,22 @@ contract("Main.basic", accounts => {
         meta.kill({from: organizer})
     })
 
-    const matrixLength = 20
+    const matrixLength = 30
+
+    it('test no_distribute_manager', async function () {
+        // init
+        await meta.init();
+        await meta.no_distribute_manager({from: organizer})
+        const finalMatrixSum = await meta.finalMatrixSum.call()
+        console.log("finalMatrixSum: "+finalMatrixSum)
+        const successTaskNumber = await meta.successTaskNumber.call()
+        const excepted = matrixLength*matrixLength
+        assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
+    })
 
     it("test test_direct_distribute_manager function", async function () {
+        // init
+        await meta.init();
         const task0 = test_direct_distribute_manager(meta, organizer)
         const task1 = test_direct_distribute_manager(meta, participant_1)
         const task2 = test_direct_distribute_manager(meta, participant_2)
@@ -113,7 +112,6 @@ contract("Main.basic", accounts => {
     it("test loop_distribute_manager function", async function () {
         // init
         await meta.init();
-
         const task0 = test_loop_distribute_manager(meta, organizer)
         const task1 = test_loop_distribute_manager(meta, participant_1)
         const task2 = test_loop_distribute_manager(meta, participant_2)
