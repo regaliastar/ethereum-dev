@@ -58,6 +58,12 @@ contract("Main.basic", accounts => {
                 return meta.loop_distribute_manager({from: address})
             })
     }
+    function test_direct_distribute_without_testTask_manager(meta, address) {
+        return Promise.resolve()
+            .then(() => {
+                return meta.direct_distribute_without_testTask_manager({from: address})
+            })
+    }
 
     const organizer = accounts[0]
     const participant_1 = accounts[1]
@@ -124,7 +130,23 @@ contract("Main.basic", accounts => {
         console.log('successTaskNumber: '+successTaskNumber.toNumber())
         const excepted = matrixLength*matrixLength
         assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
-
     })
+
+    it("test direct_distribute_without_testTask_manager", async function () {
+        // init
+        await meta.init();
+        const task0 = test_direct_distribute_without_testTask_manager(meta, organizer)
+        const task1 = test_direct_distribute_without_testTask_manager(meta, participant_1)
+        const task2 = test_direct_distribute_without_testTask_manager(meta, participant_2)
+        const task3 = test_direct_distribute_without_testTask_manager(meta, participant_3)
+        await Promise.all([task0, task1, task2, task3])
+        const finalMatrixSum = await meta.finalMatrixSum.call()
+        console.log("finalMatrixSum: "+finalMatrixSum)
+        const successTaskNumber = await meta.successTaskNumber.call()
+        console.log('successTaskNumber: '+successTaskNumber.toNumber())
+        const excepted = matrixLength*matrixLength
+        assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
+    })
+
 
 })

@@ -38,8 +38,6 @@ contract Main {
         if(unitLoad == 0){
             return 0;
         }
-//        return 10*unitLoad;
-
         uint Length = _matrixLength;
         uint[] memory x = new uint[](Length);
         uint[] memory y = new uint[](Length);
@@ -64,7 +62,7 @@ contract Main {
     }
 
     /*
-        算法一：一次性分配
+        调用算法一：一次性分配
         判断任务是否完成，并返回结果
     */
     function direct_distribute_manager() public returns(uint){
@@ -84,7 +82,7 @@ contract Main {
     }
 
     /*
-        算法二：一次性分配
+        调用算法二：一次性分配
         判断任务是否完成，并返回结果
     */
     function loop_distribute_manager() public returns(uint){
@@ -106,7 +104,25 @@ contract Main {
             // 更新 finalMatrixSum
             finalMatrixSum = finalMatrixSum + sum;
         }
-        return finalMatrixSum;
+    }
+
+    /*
+        调用算法三：不进行testTask，直接平均分配任务
+    */
+    function direct_distribute_without_testTask_manager() public returns(uint){
+        uint[] memory ability = direct_distribute(totalTaskNumber);
+        uint unitLoad = getLoadByAddress(ability, msg.sender);  // 被分配的工作量
+        uint sum = matrixMulitexecWork(unitLoad, matrixLength);
+        // 更新 finalMatrixSum
+        finalMatrixSum = finalMatrixSum + sum;
+        // 更新 successTaskNumber
+        successTaskNumber = successTaskNumber + unitLoad;
+        //若任务执行完毕
+        if(successTaskNumber == totalTaskNumber){
+            return finalMatrixSum;
+        }
+        //总任务还在继续，但该节点已经工作完成
+        return 0;
     }
 
     /*
@@ -132,7 +148,7 @@ contract Main {
             }
         }
         //先化简ability比例为 最简整数比
-        uint GCD = algo.countNGcd(ability, Length);
+        uint GCD = algo.countNGcd(ability, Length); // 得到算力的最大公约数
         uint K = 0;
         for(uint i = 0; i < Length; i++){
             ability[i] = ability[i]/GCD;
@@ -187,7 +203,7 @@ contract Main {
                 maxIndex = i;
             }
         }
-        // TODO: 优化算法为按比例分配，而不是直接做减法
+        // TODO: 优化该算法为按比例分配，而不是直接做减法
         //
         if(K > task_remained){
             uint diff = uint((K - task_remained)/Length);
@@ -203,6 +219,29 @@ contract Main {
             }else{
                 ability[maxIndex] = ability[maxIndex] + (task_remained - sum);
             }
+        }
+        return ability;
+    }
+
+    /*
+        计算分配任务问题，算法三：
+        不进行算力测试，直接平均分配全部任务
+        @param uint totalTaskNum - 需要分配的任务数
+        @returns uint[] memory - 分配得到的任务数
+    */
+    function direct_distribute_without_testTask(uint totalTaskNum) public view returns(uint[] memory){
+        uint Length = nodeNumber;
+        uint[] memory ability = new uint[](Length);
+        uint average = uint(totalTaskNum / Length);
+        for(uint i = 0; i < Length; i++){
+            ability[i] = average;
+        }
+        // 排除average被截断的情况
+        uint t = average * Length;
+        if(t <= totalTaskNumber){
+            ability[0] = ability[0] + (totalTaskNumber - t);
+        }else{
+            ability[0] = ability[0] - (t - totalTaskNumber);
         }
         return ability;
     }
