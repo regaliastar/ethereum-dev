@@ -126,6 +126,35 @@ contract Main {
     }
 
     /*
+        计算分配任务问题，算法四：
+        不进行算力测试，循环分配全部任务
+        @param uint totalTaskNum - 需要分配的任务数
+        @returns uint[] memory - 分配得到的任务数
+    */
+    function loop_distribute_without_testTask_manager() public returns(uint){
+        uint Length = nodeNumber;
+        uint[] memory ability = new uint[](Length);
+        // 设置每个节点一次执行50个任务
+        uint unitLoad = 50;
+        uint task_remained = totalTaskNumber - successTaskNumber;
+        while(true){
+            if(successTaskNumber >= totalTaskNumber){
+                return finalMatrixSum;
+            }
+            task_remained = totalTaskNumber - successTaskNumber;
+            if(unitLoad > task_remained){
+                unitLoad = task_remained;
+            }
+            // 更新 successTaskNumber
+            uint sum = matrixMulitexecWork(unitLoad, matrixLength);
+            successTaskNumber = successTaskNumber + unitLoad;
+
+            // 更新 finalMatrixSum
+            finalMatrixSum = finalMatrixSum + sum;
+        }
+    }
+
+    /*
       计算分配任务问题，算法一：
       一次性分配
       约束条件：算力强的节点尽可能分配多的任务，且尽量均匀
