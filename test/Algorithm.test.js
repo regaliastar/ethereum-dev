@@ -24,8 +24,6 @@ contract('Algorithm', accounts => {
     })
 
     it('matrixMulti',async function () {
-        const m1 = [[1,1],[1,1]]
-        const m2 = [[1,1],[1,1]]
         const value = await meta.matrixMulti.call()
         const expectValue = 108
         assert.equal(expectValue.toString(), value.toString(), 'matrixMulti function error!')

@@ -83,7 +83,7 @@ contract("Main.basic", accounts => {
         meta.kill({from: organizer})
     })
 
-    const matrixLength = 10
+    const matrixLength = 20
 
     it("test direct_distribute function",async function () {
         const totalTaskNum = matrixLength * matrixLength
@@ -91,23 +91,11 @@ contract("Main.basic", accounts => {
         let sum = 0
         for(let i = 0; i < ability.length; i++){
             sum += ability[i].toNumber()
-            console.log('分配'+i+': '+ability[i].toNumber())
+            // console.log('分配'+i+': '+ability[i].toNumber())
         }
         assert.equal(sum, totalTaskNum, "direct_distribute error!")
     })
 
-    it("test loop_distribute function",async function () {
-        console.log("------------------")
-        const totalTaskNum = matrixLength * matrixLength
-        const ability = await meta.loop_distribute.call(totalTaskNum)
-        let sum = 0
-        for(let i = 0; i < ability.length; i++){
-            sum += ability[i].toNumber()
-            console.log('分配'+i+': '+ability[i].toNumber())
-        }
-        assert.equal(sum, totalTaskNum, "direct_distribute error!")
-    })
-/*
     it("test test_direct_distribute_manager function", async function () {
         const task0 = test_direct_distribute_manager(meta, organizer)
         const task1 = test_direct_distribute_manager(meta, participant_1)
@@ -120,7 +108,7 @@ contract("Main.basic", accounts => {
         const excepted = matrixLength*matrixLength
         assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
     })
-*/
+
     it("test loop_distribute_manager function", async function () {
         // init
         await meta.init();

@@ -21,7 +21,7 @@ contract Main {
         // 初始化
         organizer = msg.sender;
         nodeNumber = 1;
-        matrixLength = 10;  // 通过手动设置改变矩阵长度
+        matrixLength = 20;  // 通过手动设置改变矩阵长度
         totalTaskNumber = matrixLength * matrixLength;
         successTaskNumber = 0;
         finalMatrixSum = 0;
@@ -33,14 +33,14 @@ contract Main {
     }
 
     // 根据 unitLoad - 工作量 来分配任务，将执行任务结果返回给调用者
-    function matrixMulitexecWork(uint unitLoad) private returns(uint) {
+    function matrixMulitexecWork(uint unitLoad, uint _matrixLength) private pure returns(uint) {
         //一次性分配
         if(unitLoad == 0){
             return 0;
         }
 //        return 10*unitLoad;
-        Algorithm algo = new Algorithm();
-        uint Length = matrixLength;
+
+        uint Length = _matrixLength;
         uint[] memory x = new uint[](Length);
         uint[] memory y = new uint[](Length);
         uint[] memory result = new uint[](unitLoad);    // 为计算的结果
@@ -50,10 +50,13 @@ contract Main {
         }
         uint sum = 0;
         for(uint i = 0; i < unitLoad; i++){
-            // 这里本来应该取 Length
+            // 这里本来应该取 i < Length
             // 但是为了保证所有任务都一样，以便于分析算力汇聚效果
-            // 故硬编码 10
-            uint r = algo.execUnit(x, y, 10);
+            // 故硬编码 i < 10
+            uint r = 0;
+            for(uint j = 0; j < 10; j++){
+                r = x[j]*y[j] + r;
+            }
             sum = sum + r;
             result[i] = r;
         }
@@ -67,7 +70,7 @@ contract Main {
     function direct_distribute_manager() public returns(uint){
         uint[] memory ability = direct_distribute(totalTaskNumber);
         uint unitLoad = getLoadByAddress(ability, msg.sender);  // 被分配的工作量
-        uint sum = matrixMulitexecWork(unitLoad);
+        uint sum = matrixMulitexecWork(unitLoad, matrixLength);
         // 更新 finalMatrixSum
         finalMatrixSum = finalMatrixSum + sum;
         // 更新 successTaskNumber
@@ -97,7 +100,7 @@ contract Main {
                 unitLoad = task_remained;
             }
             // 更新 successTaskNumber
-            uint sum = matrixMulitexecWork(unitLoad);
+            uint sum = matrixMulitexecWork(unitLoad, matrixLength);
             successTaskNumber = successTaskNumber + unitLoad;
 
             // 更新 finalMatrixSum
