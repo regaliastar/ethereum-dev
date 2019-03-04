@@ -33,7 +33,10 @@ contract Main {
     }
 
     // 根据 unitLoad - 工作量 来分配任务，将执行任务结果返回给调用者
-    function matrixMulitexecWork(uint unitLoad, uint _matrixLength) private pure returns(uint) {
+    function matrixMulitexecWork(uint unitLoad, uint _matrixLength)
+    private
+    pure
+    returns(uint) {
         //一次性分配
         if(unitLoad == 0){
             return 0;
@@ -65,7 +68,9 @@ contract Main {
         调用算法0： 不进行分布式计算，用作对照组
         只有 organizer 可以调用
     */
-    function no_distribute_manager() public returns(uint){
+    function no_distribute_manager()
+    public
+    returns(uint){
         require(msg.sender == organizer);
         uint unitLoad = totalTaskNumber;
         uint sum = matrixMulitexecWork(unitLoad, matrixLength);
@@ -80,7 +85,9 @@ contract Main {
         调用算法一：一次性分配
         判断任务是否完成，并返回结果
     */
-    function direct_distribute_manager() public returns(uint){
+    function direct_distribute_manager()
+    public
+    returns(uint){
         uint[] memory ability = direct_distribute(totalTaskNumber);
         uint unitLoad = getLoadByAddress(ability, msg.sender);  // 被分配的工作量
         uint sum = matrixMulitexecWork(unitLoad, matrixLength);
@@ -97,10 +104,12 @@ contract Main {
     }
 
     /*
-        调用算法二：一次性分配
-        判断任务是否完成，并返回结果
+        调用算法二：循环分配
+        谁先完成谁继续分配
     */
-    function loop_distribute_manager() public returns(uint){
+    function loop_distribute_manager()
+    public
+    returns(uint){
         uint[] memory ability = loop_distribute(totalTaskNumber);
         uint unitLoad = getLoadByAddress(ability, msg.sender);
         uint task_remained = totalTaskNumber - successTaskNumber;
@@ -122,9 +131,11 @@ contract Main {
     }
 
     /*
-        调用算法三：不进行testTask，直接平均分配任务
+        调用算法三：不进行算力测试，直接平均分配任务
     */
-    function direct_distribute_without_testTask_manager() public returns(uint){
+    function direct_distribute_without_testTask_manager()
+    public
+    returns(uint){
         uint[] memory ability = direct_distribute(totalTaskNumber);
         uint unitLoad = getLoadByAddress(ability, msg.sender);  // 被分配的工作量
         uint sum = matrixMulitexecWork(unitLoad, matrixLength);
@@ -146,7 +157,9 @@ contract Main {
         @param uint totalTaskNum - 需要分配的任务数
         @returns uint[] memory - 分配得到的任务数
     */
-    function loop_distribute_without_testTask_manager() public returns(uint){
+    function loop_distribute_without_testTask_manager()
+    public
+    returns(uint){
         // 设置每个节点一次执行50个任务
         uint unitLoad = 20;
         uint task_remained = totalTaskNumber - successTaskNumber;
@@ -178,7 +191,9 @@ contract Main {
       3600 个任务 耗时   ms
       10000个任务 out of gas
     */
-    function direct_distribute(uint totalTaskNum) public returns(uint[] memory){
+    function direct_distribute(uint totalTaskNum)
+    public
+    returns(uint[] memory){
         Algorithm algo = new Algorithm();
         uint Length = nodeNumber;
         uint[] memory ability = new uint[](Length);
@@ -233,7 +248,10 @@ contract Main {
         @param uint totalTaskNum - 需要分配的任务数
         @returns uint[] memory - 分配得到的任务数
     */
-    function loop_distribute(uint task_remained) public view returns(uint[] memory){
+    function loop_distribute(uint task_remained)
+    public
+    view
+    returns(uint[] memory){
         uint Length = nodeNumber;
         uint[] memory ability = new uint[](Length);
         uint K = 0;
@@ -271,7 +289,10 @@ contract Main {
         @param uint totalTaskNum - 需要分配的任务数
         @returns uint[] memory - 分配得到的任务数
     */
-    function direct_distribute_without_testTask(uint totalTaskNum) public view returns(uint[] memory){
+    function direct_distribute_without_testTask(uint totalTaskNum)
+    public
+    view
+    returns(uint[] memory){
         uint Length = nodeNumber;
         uint[] memory ability = new uint[](Length);
         uint average = uint(totalTaskNum / Length);
@@ -288,7 +309,10 @@ contract Main {
         return ability;
     }
 
-    function getLoadByAddress(uint[] memory ability, address addr) private view returns(uint){
+    function getLoadByAddress(uint[] memory ability, address addr)
+    private
+    view
+    returns(uint){
         uint Length = nodeNumber;
         for(uint i = 0; i < Length; i++){
             if(Nodes[i].addr == addr){
@@ -297,7 +321,9 @@ contract Main {
         }
     }
 
-    function getAbility() public view returns(uint[] memory){
+    function getAbility() public
+    view
+    returns(uint[] memory){
         uint Length = nodeNumber;
         uint[] memory ability = new uint[](Length);
         for(uint i = 0; i < Length; i++){
@@ -306,7 +332,9 @@ contract Main {
         return ability;
     }
 
-    function showNode(address addr) public view returns(address, uint, bool){
+    function showNode(address addr) public
+    view
+    returns(address, uint, bool){
         uint length = Nodes.length;
         bool flag = false;
         Participant memory node;

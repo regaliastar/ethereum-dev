@@ -3,6 +3,81 @@ pragma solidity ^0.5.0;
 import './Utils.sol';
 
 contract Algorithm {
+    // 梯度下降算法 一元线性回归
+    // _a, _b 	—— 需求的参数值
+    // xi, yi 	—— 样本数组
+    // length   —— 数组长度
+    // _step 	—— 步长设置
+    // _inaccuracy —— 最大误差
+    // 串行版
+    // 由于 solidity 无法处理浮点数，因此传递参数时默认将所有值扩大 1e6 倍，再处理计算结果
+    function gradient_descent(int a, int b, int[] memory xi, int[] memory yi, int length, int times, int inaccuracy)
+    public
+    pure
+    returns(int, int, int){
+        int count = 100;        // 最大迭代次数，防止无限循环
+        int grad_a = 0;
+        int grad_b = 0;
+        int cost = 0;
+        int old_cost = J(a, b, xi, yi, length);
+        while(true){
+            count--;
+            if(count <= 0){
+                break;
+            }
+            grad_a = Ja(a, b, xi, yi, length, times) * 1e4;    // step * times = 1e4, step = 0.01
+            grad_b = Jb(a, b, xi, yi, length, times) * 1e4;
+            a = a - grad_a;
+            b = b - grad_b;
+            cost = J(a, b, xi, yi, length);	    // 代价函数
+            if(abs(old_cost - cost) < inaccuracy){
+                return (a, b);
+            }
+            old_cost = cost;
+        }
+        return (a, b, count);
+    }
+    // 代价函数
+    function J(int a, int b, int[] memory xi, int[] memory yi, int length)
+    private
+    pure
+    returns(int){
+        int sum = 0;
+        for(uint i = 0; i < uint(length); i++){
+            sum = sum + (a*xi[i]+b-yi[i]) * (a*xi[i]+b-yi[i]);
+        }
+        return sum/2;
+    }
+    // 对 J 求 a 的偏导
+    function Ja(int a, int b, int[] memory xi, int[] memory yi, int length)
+    private
+    pure
+    returns(int){
+        int sum = 0;
+        for(uint i = 0; i < uint(length); i++){
+            sum = sum + (a*xi[i]+b-yi[i])*xi[i];
+        }
+        return sum;
+    }
+    // 对 J 求 b 的偏导
+    function Jb(int a, int b, int[] memory xi, int[] memory yi, int length)
+    private
+    pure
+    returns(int){
+        int sum = 0;
+        for(uint i = 0; i < uint(length); i++){
+            sum = sum + a*xi[i]+b-yi[i];
+        }
+        return sum;
+    }
+
+    function abs(int a) private pure returns(int){
+        if(a < 0){
+            return -a;
+        }
+        return a;
+    }
+
     // 计算 N 个数的最大公约数
     function countNGcd(uint[] memory ability, uint length) public returns(uint){
         Utils utils = new Utils();
@@ -88,6 +163,12 @@ contract Algorithm {
             }
         }
         return SUM;
+    }
+
+    function tsetFixedCompute(int _a) public pure returns(int){
+        int a = _a;
+        a = a / 10 * 10;
+        return a;
     }
     /*
     function linearRegression(int[] memory x, int[] memory y) public pure returns(int[] memory parameter){
