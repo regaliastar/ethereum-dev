@@ -1,7 +1,9 @@
 pragma solidity ^0.5.0;
 
 import './Algorithm.sol';
-
+// 区块链上多个节点合作 重点讨论怎么让他计算更快
+// 斯塔尔伯格 博弈论
+// 雾计算 边缘计算
 contract Main {
     address payable organizer;      // 合约创建者
     uint public nodeNumber;         // 当前可用节点数
