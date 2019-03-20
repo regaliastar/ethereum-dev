@@ -55,6 +55,35 @@ function Jb(a, b, xi, yi) {
 }
 
 // 测试
-const xi = [1,2,3,4,5,9]
-const yi = [1,3,2,4,5,7]
-console.log(gradient_descent(0, 0, xi, yi, 0.01, 1e-3))
+// const xi = [1,2,3,4,5,9]
+// const yi = [1,3,2,4,5,7]
+// console.log(gradient_descent(0, 0, xi, yi, 0.01, 1e-3))
+
+
+// 多元线性回归
+const ml = require('ml-regression')
+const csv = require('csvtojson')
+const SLR = ml.SLR	// 线性回归
+
+const csvFilePath = 'diabetes.csv'
+let csvData = []
+let X = []
+let Y = []
+let regressionModel
+//	加载数据
+csv().fromFile(csvFilePath)
+	.on('json', obj => {
+		csvData.push(obj)
+	})
+	.on('done', () => {
+		dressData()
+		performRegression()
+	})
+
+function dressData(){
+	
+}
+
+function multi_gradient_descent(){
+
+}
