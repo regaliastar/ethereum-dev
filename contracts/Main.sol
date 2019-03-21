@@ -18,13 +18,14 @@ contract Main {
     }
     Participant[] public Nodes; // 存储每个参与计算的节点
     event testTask(uint x);     // 发射测试算力事件，计算x个元素的快速排序消耗的时间
+    event myEvent(uint index);
 
     constructor() public {
         // 初始化
         organizer = msg.sender;
         nodeNumber = 1;
-        matrixLength = 30;  // 通过手动设置改变矩阵长度
-        totalTaskNumber = matrixLength * matrixLength;
+        matrixLength = 10;  // 通过手动设置改变矩阵长度
+        totalTaskNumber = matrixLength * 10;
         successTaskNumber = 0;
         finalMatrixSum = 0;
     }
@@ -55,9 +56,13 @@ contract Main {
         for(uint i = 0; i < unitLoad; i++){
             // 这里本来应该取 i < Length
             // 但是为了保证所有任务都一样，以便于分析算力汇聚效果
-            // 故硬编码 i < 10
+            // 故硬编码 j < 10
             uint r = 0;
+            // 模拟 10*10 矩阵乘法
             for(uint j = 0; j < 10; j++){
+                for(uint k = 0; k < 10; k++){
+
+                }
                 r = x[j]*y[j] + r;
             }
             sum = sum + r;
@@ -107,6 +112,7 @@ contract Main {
 
     /*
         调用算法二：循环分配
+        优化合同网模型
         谁先完成谁继续分配
     */
     function loop_distribute_manager()
@@ -130,6 +136,55 @@ contract Main {
             // 更新 finalMatrixSum
             finalMatrixSum = finalMatrixSum + sum;
         }
+    }
+
+    function better_cnp_managet(bool flag)
+    public
+    returns(uint){
+        while(true){
+            uint index = cnp_distribute(flag); // 第index个节点得到该任务
+            if(successTaskNumber >= totalTaskNumber){
+                return finalMatrixSum;
+            }
+            if(msg.sender == Nodes[index].addr){
+                emit myEvent(index);
+            }
+            // 更新 successTaskNumber
+            uint sum = matrixMulitexecWork(1, matrixLength);
+            successTaskNumber++;
+
+            // 更新 finalMatrixSum
+            finalMatrixSum = finalMatrixSum + sum;
+
+        }
+    }
+
+    // flag = ture => 使用评估结果影响分配，即类型B
+    // flag = false => 不使用评估函数，即类型A
+    function cnp_distribute(bool flag)
+    public
+    view
+    returns(uint){
+        uint Length = nodeNumber;
+        uint[] memory ability = new uint[](Length);
+        uint maxIndex = 0;
+        for(uint i = 0; i < Length; i++){
+            ability[i] = Nodes[i].ability;
+            if(ability[maxIndex] < ability[i]){
+                maxIndex = i;
+            }
+        }
+        if(flag){
+            // 为了代码方便，可能不好理解，但是数学期望是一样的
+            ability[2] = ability[2]/100;
+            ability[3] = ability[3]/100;
+            for(uint j = 0; j < Length; j++){
+                if(ability[maxIndex] < ability[j]){
+                    maxIndex = j;
+                }
+            }
+        }
+        return maxIndex;
     }
 
     /*
@@ -163,7 +218,7 @@ contract Main {
     public
     returns(uint){
         // 设置每个节点一次执行50个任务
-        uint unitLoad = 20;
+        uint unitLoad = matrixLength;
         uint task_remained = totalTaskNumber - successTaskNumber;
         while(true){
             if(successTaskNumber >= totalTaskNumber){
