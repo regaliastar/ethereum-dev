@@ -18,7 +18,6 @@ contract Main {
     }
     Participant[] public Nodes; // 存储每个参与计算的节点
     event testTask(uint x);     // 发射测试算力事件，计算x个元素的快速排序消耗的时间
-    event myEvent(uint index);
 
     constructor() public {
         // 初始化
@@ -141,22 +140,20 @@ contract Main {
     function better_cnp_managet(bool flag)
     public
     returns(uint){
-        while(true){
-            uint index = cnp_distribute(flag); // 第index个节点得到该任务
-            if(successTaskNumber >= totalTaskNumber){
-                return finalMatrixSum;
-            }
-            if(msg.sender == Nodes[index].addr){
-                emit myEvent(index);
-            }
+        uint index = cnp_distribute(flag); // 第index个节点得到该任务
+        if(successTaskNumber >= totalTaskNumber){
+            return finalMatrixSum;
+        }
+        if(msg.sender == Nodes[index].addr){
             // 更新 successTaskNumber
             uint sum = matrixMulitexecWork(1, matrixLength);
             successTaskNumber++;
 
             // 更新 finalMatrixSum
             finalMatrixSum = finalMatrixSum + sum;
-
         }
+
+        return 0;
     }
 
     // flag = ture => 使用评估结果影响分配，即类型B

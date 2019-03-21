@@ -199,32 +199,46 @@ contract("Main.basic", accounts => {
     it("test 2_no_better_cnp_managet", async function () {
         // init
         await meta.init();
-        const task0 = test_no_better_cnp_managet(meta, organizer)
-        const task1 = test_no_better_cnp_managet(meta, participant_1)
-        const task2 = test_no_better_cnp_managet(meta, participant_2)
-        const task3 = test_no_better_cnp_managet(meta, participant_3)
-        await Promise.all([task0, task1, task2, task3])
+        let successTaskNumber
+        const excepted = matrixLength*10
+        while (true){
+            const task0 = test_no_better_cnp_managet(meta, organizer)
+            const task1 = test_no_better_cnp_managet(meta, participant_1)
+            const task2 = test_no_better_cnp_managet(meta, participant_2)
+            const task3 = test_no_better_cnp_managet(meta, participant_3)
+            await Promise.all([task0, task1, task2, task3])
+            successTaskNumber = await meta.successTaskNumber.call()
+            if(successTaskNumber == excepted){
+                break
+            }
+        }
+
         const finalMatrixSum = await meta.finalMatrixSum.call()
         console.log("finalMatrixSum: "+finalMatrixSum)
-        const successTaskNumber = await meta.successTaskNumber.call()
         console.log('successTaskNumber: '+successTaskNumber.toNumber())
-        const excepted = matrixLength*10
         assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
     })
 
     it("test 2_better_cnp_managet", async function () {
         // init
         await meta.init();
-        const task0 = test_better_cnp_managet(meta, organizer)
-        const task1 = test_better_cnp_managet(meta, participant_1)
-        const task2 = test_better_cnp_managet(meta, participant_2)
-        const task3 = test_better_cnp_managet(meta, participant_3)
-        await Promise.all([task0, task1, task2, task3])
+        let successTaskNumber
+        const excepted = matrixLength*10
+        while (true){
+            const task0 = test_better_cnp_managet(meta, organizer)
+            const task1 = test_better_cnp_managet(meta, participant_1)
+            const task2 = test_better_cnp_managet(meta, participant_2)
+            const task3 = test_better_cnp_managet(meta, participant_3)
+            await Promise.all([task0, task1, task2, task3])
+            successTaskNumber = await meta.successTaskNumber.call()
+            if(successTaskNumber == excepted){
+                break
+            }
+        }
+
         const finalMatrixSum = await meta.finalMatrixSum.call()
         console.log("finalMatrixSum: "+finalMatrixSum)
-        const successTaskNumber = await meta.successTaskNumber.call()
         console.log('successTaskNumber: '+successTaskNumber.toNumber())
-        const excepted = matrixLength*10
         assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
     })
 
