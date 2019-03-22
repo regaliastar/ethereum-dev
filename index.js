@@ -59,7 +59,7 @@ function Jb(a, b, xi, yi) {
 // const yi = [1,3,2,4,5,7]
 // console.log(gradient_descent(0, 0, xi, yi, 0.01, 1e-3))
 
-
+/*
 // 多元线性回归
 const ml = require('ml-regression')
 const csv = require('csvtojson')
@@ -87,3 +87,34 @@ function dressData(){
 function multi_gradient_descent(){
 
 }
+*/
+
+async function a_1(){
+	let count = 0
+	while(true){
+		let arr = []
+		for(let i = 0; i < 100; i++){
+			arr.push(Math.random())
+		}
+		arr.sort()
+		console.log('1_'+count)
+		count++
+		if(count>5){
+			return
+		}
+	}
+}
+
+async function a_2(){
+	let count = 0
+	while(true){
+		console.log('2_'+count)
+		count++
+		if(count>5){
+			return
+		}
+	}
+}
+
+a_1()
+a_2()

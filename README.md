@@ -20,3 +20,4 @@ truffle unbox
 ## tips
 `truffle migrate --reset`可重新部署合约
 `solidity`不支持网络编程
+遇事不决，重新部署试试

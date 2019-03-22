@@ -11,6 +11,8 @@ contract Main {
     uint public successTaskNumber;  // 当前完成任务数量
     uint public finalMatrixSum;     // 矩阵计算完毕后的和
     uint public matrixLength;       // 设置矩阵长度
+    uint public nowTaskNode;        // 当前第 successTaskNumber 个任务分配节点号
+
     struct Participant {
         address addr;
         uint ability;   // 算力
@@ -23,15 +25,18 @@ contract Main {
         // 初始化
         organizer = msg.sender;
         nodeNumber = 1;
-        matrixLength = 10;  // 通过手动设置改变矩阵长度
-        totalTaskNumber = matrixLength * 10;
+        matrixLength = 20;  // 通过手动设置改变矩阵长度
+        totalTaskNumber = matrixLength * 20;
         successTaskNumber = 0;
         finalMatrixSum = 0;
+        nowTaskNode = 0;
     }
 
-    function init() public{
+    function init()
+    public{
         successTaskNumber = 0;
         finalMatrixSum = 0;
+        nowTaskNode = 0;
     }
 
     // 根据 unitLoad - 工作量 来分配任务，将执行任务结果返回给调用者
@@ -137,21 +142,41 @@ contract Main {
         }
     }
 
-    function better_cnp_managet(bool flag)
+
+    function setAvailableByAddr(address addr, bool flag)
+    public{
+        uint length = Nodes.length;
+        for(uint i = 0; i < length; i++){
+            if(Nodes[i].addr == addr){
+                Nodes[i].available = flag;
+            }
+        }
+    }
+
+    function taskFinished()
+    public{
+        successTaskNumber++;
+    }
+
+
+    // 申请标书
+    function better_cnp_manager(bool flag)
     public
     returns(uint){
-        uint index = cnp_distribute(flag); // 第index个节点得到该任务
+        // 将请求的节点的 available 设置为 true
+        setAvailableByAddr(msg.sender, true);
+        // 第index个节点得到该任务
+        uint index = cnp_distribute(flag);
+        nowTaskNode = index;
+        // 将请求的节点的 available 设置为 false
+        setAvailableByAddr(msg.sender, false);
+
         if(successTaskNumber >= totalTaskNumber){
             return finalMatrixSum;
         }
-        if(msg.sender == Nodes[index].addr){
-            // 更新 successTaskNumber
-            uint sum = matrixMulitexecWork(1, matrixLength);
-            successTaskNumber++;
 
-            // 更新 finalMatrixSum
-            finalMatrixSum = finalMatrixSum + sum;
-        }
+        // 更新 finalMatrixSum
+//        finalMatrixSum = finalMatrixSum + 10;
 
         return 0;
     }
@@ -160,14 +185,19 @@ contract Main {
     // flag = false => 不使用评估函数，即类型A
     function cnp_distribute(bool flag)
     public
-    view
     returns(uint){
         uint Length = nodeNumber;
         uint[] memory ability = new uint[](Length);
-        uint maxIndex = 0;
+        uint maxIndex = 1;
+        for(uint k = 0; k < Length; k++){
+            if(Nodes[k].available){
+                maxIndex = k;
+                break;
+            }
+        }
         for(uint i = 0; i < Length; i++){
             ability[i] = Nodes[i].ability;
-            if(ability[maxIndex] < ability[i]){
+            if(ability[maxIndex] < ability[i] && Nodes[i].available){
                 maxIndex = i;
             }
         }
@@ -181,6 +211,8 @@ contract Main {
                 }
             }
         }
+        // 更新 Tasks，分配任务
+        nowTaskNode = maxIndex;
         return maxIndex;
     }
 
@@ -401,19 +433,21 @@ contract Main {
         return (node.addr, node.ability, node.available);
     }
 
-    function connect() public{   // solidity不支持返回结构体数组和结构体
-        Participant memory _participant = Participant(msg.sender, 0, true);
+    function connect() public returns(uint){   // solidity不支持返回结构体数组和结构体
+        Participant memory _participant = Participant(msg.sender, 0, false);
         uint length = Nodes.length;
+        //确保不会重复连接
         for(uint i = 0; i < length; i++){
             if(Nodes[i].addr == msg.sender){
-                emit testTask(10000);
-                return;
+//                emit testTask(10000);
+                return 10000;
             }
         }
         Nodes.push(_participant);
         nodeNumber = Nodes.length;
         //发射事件测试算力
-        emit testTask(10000);
+//        emit testTask(10000);
+        return 10000;
     }
 
     function disconnect(address addr) public{

@@ -22,10 +22,8 @@ contract("Main.basic", accounts => {
         return Promise.resolve()
             .then(() => {
                 return meta.connect({from: address})
-            }).then( async event => {
-                //接收event
-                const args = event.logs[0].args
-                const ability = countAbilty(args.x)
+            }).then( async res => {
+                const ability = countAbilty(10000)
                 await meta.setAbility(ability, {from: address})
                 return meta.showNode.call(address)
             }).then(node => {
@@ -36,10 +34,8 @@ contract("Main.basic", accounts => {
         return Promise.resolve()
             .then(() => {
                 return meta.connect({from: address})
-            }).then( async event => {
-                //接收event
-                const args = event.logs[0].args
-                let ability = countAbilty(args.x)
+            }).then( async res => {
+                let ability = countAbilty(10000)
                 let w = Math.random()
                 if(w > 0.5){
                     ability = ability*100
@@ -75,16 +71,28 @@ contract("Main.basic", accounts => {
                 return meta.loop_distribute_without_testTask_manager({from: address})
             })
     }
-    function test_better_cnp_managet(meta, address) {
+    function test_better_cnp_manager(meta, address) {
         return Promise.resolve()
             .then(() => {
-                return meta.better_cnp_managet(true, {from: address})
+                meta.updateSuccessTaskNumber()
+                return meta.better_cnp_manager(true, {from: address})
             })
     }
-    function test_no_better_cnp_managet(meta, address) {
+
+    async function web_testTaskUnit(meta, address){
+        const ability = countAbilty(10000)
+        await meta.setAbility(ability, {from: address})
+    }
+
+    async function sendSuccessMsg(contractInstance){
+        return contractInstance.taskFinished()
+    }
+
+    function test_no_better_cnp_manager(meta, address) {
         return Promise.resolve()
             .then(() => {
-                return meta.better_cnp_managet(false, {from: address})
+                sendSuccessMsg(meta)
+                return meta.better_cnp_manager(false, {from: address})
             })
     }
 
@@ -96,7 +104,7 @@ contract("Main.basic", accounts => {
 
     // 开始连接并计算算力
     before("beforeAll", function () {
-        return Main.deployed().then(instance => {
+        return Main.deployed().then( async instance => {
             meta = instance
             //开始连接
             const p0 = testTaskUnit(meta, organizer)
@@ -107,6 +115,7 @@ contract("Main.basic", accounts => {
             //实验二
             const p2 = cheat_testTaskUnit(meta, participant_2)
             const p3 = cheat_testTaskUnit(meta, participant_3)
+
             return Promise.all([p0, p1, p2, p3])
         })
     })
@@ -116,7 +125,7 @@ contract("Main.basic", accounts => {
         meta.kill({from: organizer})
     })
 
-    const matrixLength = 10
+    const matrixLength = 2
 /*
     it('test no_distribute_manager', async function () {
         // init
@@ -196,19 +205,23 @@ contract("Main.basic", accounts => {
         assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
     })
 */
-    it("test 2_no_better_cnp_managet", async function () {
+
+
+    it("test 2_no_better_cnp_manager", async function () {
         // init
         await meta.init();
         let successTaskNumber
         const excepted = matrixLength*10
-        while (true){
-            const task0 = test_no_better_cnp_managet(meta, organizer)
-            const task1 = test_no_better_cnp_managet(meta, participant_1)
-            const task2 = test_no_better_cnp_managet(meta, participant_2)
-            const task3 = test_no_better_cnp_managet(meta, participant_3)
+        let maxLoop = 100 // 防止无限循环
+
+        while (maxLoop--){
+            const task0 = test_no_better_cnp_manager(meta, organizer)
+            const task1 = test_no_better_cnp_manager(meta, participant_1)
+            const task2 = test_no_better_cnp_manager(meta, participant_2)
+            const task3 = test_no_better_cnp_manager(meta, participant_3)
             await Promise.all([task0, task1, task2, task3])
             successTaskNumber = await meta.successTaskNumber.call()
-            if(successTaskNumber == excepted){
+            if(successTaskNumber >= excepted){
                 break
             }
         }
@@ -219,16 +232,17 @@ contract("Main.basic", accounts => {
         assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
     })
 
+/*
     it("test 2_better_cnp_managet", async function () {
         // init
         await meta.init();
         let successTaskNumber
         const excepted = matrixLength*10
         while (true){
-            const task0 = test_better_cnp_managet(meta, organizer)
-            const task1 = test_better_cnp_managet(meta, participant_1)
-            const task2 = test_better_cnp_managet(meta, participant_2)
-            const task3 = test_better_cnp_managet(meta, participant_3)
+            const task0 = test_better_cnp_manager(meta, organizer)
+            const task1 = test_better_cnp_manager(meta, participant_1)
+            const task2 = test_better_cnp_manager(meta, participant_2)
+            const task3 = test_better_cnp_manager(meta, participant_3)
             await Promise.all([task0, task1, task2, task3])
             successTaskNumber = await meta.successTaskNumber.call()
             if(successTaskNumber == excepted){
@@ -241,5 +255,5 @@ contract("Main.basic", accounts => {
         console.log('successTaskNumber: '+successTaskNumber.toNumber())
         assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
     })
-
+*/
 })
