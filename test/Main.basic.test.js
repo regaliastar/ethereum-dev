@@ -88,11 +88,29 @@ contract("Main.basic", accounts => {
         return contractInstance.taskFinished()
     }
 
-    function test_no_better_cnp_manager(meta, address) {
+    // 单元任务——计算矩阵
+    function execTask(){
+        let sum = 1;
+        for(let i = 0; i < 10; i++){
+            for(let j = 0; j < 10; j++){
+                sum *= sum
+            }
+        }
+        return 10;
+    }
+
+    function test_no_better_cnp_manager(meta, address, defaultNodeIndex) {
         return Promise.resolve()
             .then(() => {
-                sendSuccessMsg(meta)
                 return meta.better_cnp_manager(false, {from: address})
+            }).then(() => {
+                return  meta.nowTaskNode.call()
+            }).then(nowTaskNode => {
+                console.log("nowTaskNode", nowTaskNode, defaultNodeIndex)
+                if(defaultNodeIndex == nowTaskNode){
+                    execTask()
+                    sendSuccessMsg(meta)
+                }
             })
     }
 
@@ -212,13 +230,13 @@ contract("Main.basic", accounts => {
         await meta.init();
         let successTaskNumber
         const excepted = matrixLength*10
-        let maxLoop = 100 // 防止无限循环
+        let maxLoop = 55 // 防止无限循环
 
         while (maxLoop--){
-            const task0 = test_no_better_cnp_manager(meta, organizer)
-            const task1 = test_no_better_cnp_manager(meta, participant_1)
-            const task2 = test_no_better_cnp_manager(meta, participant_2)
-            const task3 = test_no_better_cnp_manager(meta, participant_3)
+            const task0 = test_no_better_cnp_manager(meta, organizer, 0)
+            const task1 = test_no_better_cnp_manager(meta, participant_1, 1)
+            const task2 = test_no_better_cnp_manager(meta, participant_2, 2)
+            const task3 = test_no_better_cnp_manager(meta, participant_3, 3)
             await Promise.all([task0, task1, task2, task3])
             successTaskNumber = await meta.successTaskNumber.call()
             if(successTaskNumber >= excepted){
@@ -227,7 +245,7 @@ contract("Main.basic", accounts => {
         }
 
         const finalMatrixSum = await meta.finalMatrixSum.call()
-        console.log("finalMatrixSum: "+finalMatrixSum)
+        console.log("maxLoop: "+maxLoop)
         console.log('successTaskNumber: '+successTaskNumber.toNumber())
         assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
     })

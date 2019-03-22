@@ -1,3 +1,10 @@
+/*
+* 数据记录
+* 4并行 20任务：16195
+* 1并行 20任务：35218
+* */
+
+
 const Web3 = require('web3')
 const contractABI = require('./abi')()
 const contractAddress = '0x56fa63A87c4a54265Ff22aF8717D48B2EC53883c'
