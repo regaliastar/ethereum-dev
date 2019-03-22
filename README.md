@@ -15,6 +15,9 @@ truffle migrate
 truffle migrate --reset 重新部署
 truffle test
 truffle unbox
+
+npm run async-start-4 —— 4个节点并行
+npm run async-start-2 —— 2个节点并行
 ```
 
 ## tips

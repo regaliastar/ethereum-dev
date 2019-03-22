@@ -1,7 +1,9 @@
 /*
 * 数据记录
-* 4并行 20任务：16195
+* 4并行 20任务：16195 —— truffle test
 * 1并行 20任务：35218
+* 2并行 20任务：22115
+* 4并行 20任务：32341
 * */
 
 
@@ -16,8 +18,8 @@ if(web3.isConnected()){
 }
 const origanizer = '0x4e681f2221C84d4626C9220A5A51319122A0E3aD'
 const participant_1 = '0x063a1895b6D14452b9D75CA0BD8C9C4684fe56b0'
-const defaultAddress = participant_1
-const defaultNodeIndex = 1
+let defaultAddress = origanizer
+let defaultNodeIndex = 0
 
 function consoleNodeNumber() {
     const nodeNumber = contractInstance.nodeNumber.call()
@@ -78,15 +80,16 @@ async function testTaskUnit() {
 
 // 单元任务——计算矩阵
 function execTask(){
-    let sum = 1;
-    for(let i = 0; i < 10; i++){
-        for(let j = 0; j < 10; j++){
-            sum *= sum
-        }
+    const k = 1000
+    let arr = []
+    for(let i = 0; i < k; i++){
+        arr.push(Math.random())
     }
-    return 10;
+    arr.sort()
 }
-function init(){
+function init(address, NodeIndex){
+    defaultAddress = address
+    defaultNodeIndex = NodeIndex
     return contractInstance.init({from: defaultAddress})
 }
 
@@ -114,11 +117,11 @@ async function applyTask(){
     return false
 }
 
-async function start() {
-    init()
+module.exports = async function(_address, _nodeIndex) {
+    init(_address, _nodeIndex)
     await connect()
-    let maxLoop = 30 // 防止无限循环
     const totalTaskNumber = 20
+    let maxLoop = totalTaskNumber + 1 // 防止无限循环
     let flag = false
     let successTaskNumber = 0
     consoleSuccessTaskNumber()
@@ -150,7 +153,6 @@ async function start() {
     console.log('执行结束')
 }
 
-start()
 
 // consoleNodeByAddress(origanizer)
 // contractInstance.setAvailableByAddr(defaultAddress, true, {from: defaultAddress})
