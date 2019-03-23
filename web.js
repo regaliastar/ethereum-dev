@@ -1,11 +1,29 @@
 /*
 * 数据记录
-* 4并行 20任务：16195 —— truffle test
-* 1并行 20任务：35218
-* 2并行 20任务：22115
-* 4并行 20任务：32341
+* 4并行 20任务：19195 —— truffle test
+* 实验一（4并行，（false, true）vs（true, true））：
+* 20任务 不优化，老实节点(false, true)：20655
+* 50任务 不优化，老实节点(false, true)：66173  49094
+* 50任务   优化，老实节点(true, true)：
+* 100任务 不优化，老实节点(false, true)：108626    114914
+* 100任务   优化，老实节点(true, true)：
+* 150任务 不优化，老实节点(false, true)：185095
+* 150任务   优化，老实节点(true, true)：
+* 200任务 不优化，老实节点(false, true)：259899
+* 200任务   优化，老实节点(true, true)：
+*
+* 实验二（4并行，（false, false）vs（true, false））：
+* 只修改两个诚实节点，两个欺骗节点
+* 50任务 不优化，欺骗节点(false, false)：76705 49995
+* 50任务   优化，欺骗节点(true, false)：       56726
+* 100任务 不优化，欺骗节点(false, false)：145109   117421
+* 100任务   优化，欺骗节点(true, false)：          114597
+* 150任务 不优化，欺骗节点(false, false)：227681
+* 150任务   优化，欺骗节点(true, false)：
+* 200任务 不优化，欺骗节点(false, false)：273717
+* 200任务   优化，欺骗节点(true, false)：
+*
 * */
-
 
 const Web3 = require('web3')
 const contractABI = require('./abi')()
@@ -17,7 +35,6 @@ if(web3.isConnected()){
     console.log('web3 连接成功')
 }
 const origanizer = '0x4e681f2221C84d4626C9220A5A51319122A0E3aD'
-const participant_1 = '0x063a1895b6D14452b9D75CA0BD8C9C4684fe56b0'
 let defaultAddress = origanizer
 let defaultNodeIndex = 0
 
@@ -41,6 +58,12 @@ function consoleSuccessTaskNumber() {
     const successTaskNumber = contractInstance.successTaskNumber.call()
     const toNumber = successTaskNumber.toNumber()
     console.log('successTaskNumber', toNumber)
+}
+
+function consoleTotalTaskNumber() {
+    const totalTaskNumber = contractInstance.totalTaskNumber.call()
+    const toNumber = totalTaskNumber.toNumber()
+    console.log('totalTaskNumber', toNumber)
 }
 
 function setAbility(ability) {
@@ -73,12 +96,15 @@ function countAbilty(result) {
     return r
 }
 
-async function testTaskUnit() {
-    const ability = countAbilty(10000)
-    await contractInstance.setAbility(ability, {from: defaultAddress})
+async function testTaskUnit(_manager_flag, _contractor_flag) {
+    let ability = countAbilty(10000)
+    if(!_contractor_flag){
+        ability = ability * 100
+    }
+    await contractInstance.setAbility(ability, _manager_flag, {from: defaultAddress})
 }
 
-// 单元任务——计算矩阵
+// 单元任务——快速排序
 function execTask(){
     const k = 1000
     let arr = []
@@ -87,15 +113,15 @@ function execTask(){
     }
     arr.sort()
 }
-function init(address, NodeIndex){
-    defaultAddress = address
-    defaultNodeIndex = NodeIndex
+function init(_address, _nodeIndex){
+    defaultAddress = _address
+    defaultNodeIndex = _nodeIndex
     return contractInstance.init({from: defaultAddress})
 }
 
-async function connect() {
+async function connect(_manager_flag, _contractor_flag) {
     await contractInstance.connect({from: defaultAddress})
-    await testTaskUnit()
+    await testTaskUnit(_manager_flag, _contractor_flag)
 }
 
 async function sendSuccessMsg(){
@@ -103,13 +129,14 @@ async function sendSuccessMsg(){
 }
 
 // 投标并获取标书（index），返回值表示是否被分配任务
-// false 表示该节点为 老实节点
+// _manager_flag => true 表示优化 cnp
+// _contractor_flag => true 表示 老实节点
 
-async function applyTask(){
+async function applyTask(_manager_flag, _contractor_flag){
     // 提交算力
-    testTaskUnit()
+    testTaskUnit(_manager_flag, _contractor_flag)
     // 标书
-    await contractInstance.better_cnp_manager(false, {from: defaultAddress})
+    await contractInstance.better_cnp_manager(_manager_flag, {from: defaultAddress})
     const nowTaskNode = await contractInstance.nowTaskNode.call()
     if(defaultNodeIndex == nowTaskNode.toNumber()){
         return true
@@ -117,18 +144,19 @@ async function applyTask(){
     return false
 }
 
-module.exports = async function(_address, _nodeIndex) {
+module.exports = async function(_address, _nodeIndex, _manager_flag, _contractor_flag) {
     init(_address, _nodeIndex)
-    await connect()
-    const totalTaskNumber = 20
+    await connect(_manager_flag, _contractor_flag)
+    const totalTaskNumber = 100
     let maxLoop = totalTaskNumber + 1 // 防止无限循环
     let flag = false
     let successTaskNumber = 0
+    consoleTotalTaskNumber()
     consoleSuccessTaskNumber()
     // 每一次循环都是一次请求标书
     const begin = new Date()
     while (maxLoop--){
-        flag = await applyTask()
+        flag = await applyTask(_manager_flag, _contractor_flag)
         // 表示被分配到任务
         console.log(maxLoop, flag)
         if(flag){
@@ -146,7 +174,7 @@ module.exports = async function(_address, _nodeIndex) {
     }
     const end = new Date()
     const last_time = end - begin
-
+    consoleTotalTaskNumber()
     consoleSuccessTaskNumber()
     console.log("maxLoop", maxLoop)
     console.log("花费时间", last_time, 'ms')

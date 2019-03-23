@@ -197,7 +197,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 461,
-        "sourceUnit": 2104,
+        "sourceUnit": 2091,
         "src": "27:21:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -205,7 +205,7 @@
       {
         "baseContracts": [],
         "contractDependencies": [
-          2103
+          2090
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -442,7 +442,7 @@
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Utils_$2103",
+                        "typeIdentifier": "t_contract$_Utils_$2090",
                         "typeString": "contract Utils"
                       },
                       "typeName": {
@@ -450,10 +450,10 @@
                         "id": 30,
                         "name": "Utils",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 2103,
+                        "referencedDeclaration": 2090,
                         "src": "343:5:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Utils_$2103",
+                          "typeIdentifier": "t_contract$_Utils_$2090",
                           "typeString": "contract Utils"
                         }
                       },
@@ -475,7 +475,7 @@
                       "nodeType": "NewExpression",
                       "src": "357:9:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_creation_nonpayable$__$returns$_t_contract$_Utils_$2103_$",
+                        "typeIdentifier": "t_function_creation_nonpayable$__$returns$_t_contract$_Utils_$2090_$",
                         "typeString": "function () returns (contract Utils)"
                       },
                       "typeName": {
@@ -483,10 +483,10 @@
                         "id": 32,
                         "name": "Utils",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 2103,
+                        "referencedDeclaration": 2090,
                         "src": "361:5:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Utils_$2103",
+                          "typeIdentifier": "t_contract$_Utils_$2090",
                           "typeString": "contract Utils"
                         }
                       }
@@ -501,7 +501,7 @@
                     "nodeType": "FunctionCall",
                     "src": "357:11:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Utils_$2103",
+                      "typeIdentifier": "t_contract$_Utils_$2090",
                       "typeString": "contract Utils"
                     }
                   },
@@ -769,7 +769,7 @@
                         "referencedDeclaration": 31,
                         "src": "457:5:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Utils_$2103",
+                          "typeIdentifier": "t_contract$_Utils_$2090",
                           "typeString": "contract Utils"
                         }
                       },
@@ -780,7 +780,7 @@
                       "lValueRequested": false,
                       "memberName": "gcd",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 2102,
+                      "referencedDeclaration": 2089,
                       "src": "457:9:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$_t_uint256_$",
@@ -910,7 +910,7 @@
                                 "referencedDeclaration": 31,
                                 "src": "552:5:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_contract$_Utils_$2103",
+                                  "typeIdentifier": "t_contract$_Utils_$2090",
                                   "typeString": "contract Utils"
                                 }
                               },
@@ -921,7 +921,7 @@
                               "lValueRequested": false,
                               "memberName": "gcd",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 2102,
+                              "referencedDeclaration": 2089,
                               "src": "552:9:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$_t_uint256_$",
@@ -1690,10 +1690,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2121,
-                        2122
+                        2108,
+                        2109
                       ],
-                      "referencedDeclaration": 2121,
+                      "referencedDeclaration": 2108,
                       "src": "976:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -3621,7 +3621,7 @@
                       "name": "msg",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2118,
+                      "referencedDeclaration": 2105,
                       "src": "1916:3:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_magic_message",
@@ -4872,10 +4872,10 @@
                             "name": "revert",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [
-                              2123,
-                              2124
+                              2110,
+                              2111
                             ],
-                            "referencedDeclaration": 2123,
+                            "referencedDeclaration": 2110,
                             "src": "2450:6:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_revert_pure$__$returns$__$",
@@ -6006,7 +6006,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 461,
-        "sourceUnit": 2104,
+        "sourceUnit": 2091,
         "src": "27:21:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -6014,7 +6014,7 @@
       {
         "baseContracts": [],
         "contractDependencies": [
-          2103
+          2090
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -6251,7 +6251,7 @@
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Utils_$2103",
+                        "typeIdentifier": "t_contract$_Utils_$2090",
                         "typeString": "contract Utils"
                       },
                       "typeName": {
@@ -6259,10 +6259,10 @@
                         "id": 30,
                         "name": "Utils",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 2103,
+                        "referencedDeclaration": 2090,
                         "src": "343:5:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Utils_$2103",
+                          "typeIdentifier": "t_contract$_Utils_$2090",
                           "typeString": "contract Utils"
                         }
                       },
@@ -6284,7 +6284,7 @@
                       "nodeType": "NewExpression",
                       "src": "357:9:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_creation_nonpayable$__$returns$_t_contract$_Utils_$2103_$",
+                        "typeIdentifier": "t_function_creation_nonpayable$__$returns$_t_contract$_Utils_$2090_$",
                         "typeString": "function () returns (contract Utils)"
                       },
                       "typeName": {
@@ -6292,10 +6292,10 @@
                         "id": 32,
                         "name": "Utils",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 2103,
+                        "referencedDeclaration": 2090,
                         "src": "361:5:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Utils_$2103",
+                          "typeIdentifier": "t_contract$_Utils_$2090",
                           "typeString": "contract Utils"
                         }
                       }
@@ -6310,7 +6310,7 @@
                     "nodeType": "FunctionCall",
                     "src": "357:11:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Utils_$2103",
+                      "typeIdentifier": "t_contract$_Utils_$2090",
                       "typeString": "contract Utils"
                     }
                   },
@@ -6578,7 +6578,7 @@
                         "referencedDeclaration": 31,
                         "src": "457:5:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Utils_$2103",
+                          "typeIdentifier": "t_contract$_Utils_$2090",
                           "typeString": "contract Utils"
                         }
                       },
@@ -6589,7 +6589,7 @@
                       "lValueRequested": false,
                       "memberName": "gcd",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 2102,
+                      "referencedDeclaration": 2089,
                       "src": "457:9:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$_t_uint256_$",
@@ -6719,7 +6719,7 @@
                                 "referencedDeclaration": 31,
                                 "src": "552:5:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_contract$_Utils_$2103",
+                                  "typeIdentifier": "t_contract$_Utils_$2090",
                                   "typeString": "contract Utils"
                                 }
                               },
@@ -6730,7 +6730,7 @@
                               "lValueRequested": false,
                               "memberName": "gcd",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 2102,
+                              "referencedDeclaration": 2089,
                               "src": "552:9:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$_t_uint256_$",
@@ -7499,10 +7499,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2121,
-                        2122
+                        2108,
+                        2109
                       ],
-                      "referencedDeclaration": 2121,
+                      "referencedDeclaration": 2108,
                       "src": "976:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -9430,7 +9430,7 @@
                       "name": "msg",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2118,
+                      "referencedDeclaration": 2105,
                       "src": "1916:3:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_magic_message",
@@ -10681,10 +10681,10 @@
                             "name": "revert",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [
-                              2123,
-                              2124
+                              2110,
+                              2111
                             ],
-                            "referencedDeclaration": 2123,
+                            "referencedDeclaration": 2110,
                             "src": "2450:6:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_revert_pure$__$returns$__$",
@@ -11801,7 +11801,7 @@
     }
   },
   "schemaVersion": "3.0.2",
-  "updatedAt": "2019-03-22T08:18:59.673Z",
+  "updatedAt": "2019-03-23T07:00:37.379Z",
   "devdoc": {
     "methods": {}
   },

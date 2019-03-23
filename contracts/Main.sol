@@ -26,7 +26,8 @@ contract Main {
         organizer = msg.sender;
         nodeNumber = 1;
         matrixLength = 20;  // 通过手动设置改变矩阵长度
-        totalTaskNumber = matrixLength * 20;
+        // 系统最大任务数 200
+        totalTaskNumber = matrixLength * 10;
         successTaskNumber = 0;
         finalMatrixSum = 0;
         nowTaskNode = 0;
@@ -155,7 +156,9 @@ contract Main {
 
     function taskFinished()
     public{
-        successTaskNumber++;
+        if(successTaskNumber < totalTaskNumber){
+            successTaskNumber++;
+        }
     }
 
 
@@ -163,6 +166,9 @@ contract Main {
     function better_cnp_manager(bool flag)
     public
     returns(uint){
+        if(successTaskNumber >= totalTaskNumber){
+            return 0;
+        }
         // 将请求的节点的 available 设置为 true
         setAvailableByAddr(msg.sender, true);
         // 第index个节点得到该任务
@@ -201,7 +207,7 @@ contract Main {
                 maxIndex = i;
             }
         }
-        if(flag){
+        /*if(flag){
             // 为了代码方便，可能不好理解，但是数学期望是一样的
             ability[2] = ability[2]/100;
             ability[3] = ability[3]/100;
@@ -210,7 +216,7 @@ contract Main {
                     maxIndex = j;
                 }
             }
-        }
+        }*/
         // 更新 Tasks，分配任务
         nowTaskNode = maxIndex;
         return maxIndex;
@@ -461,12 +467,16 @@ contract Main {
         nodeNumber = Nodes.length;
     }
 
-    function setAbility(uint ability) public{
+    function setAbility(uint ability, bool _manager_flag) public{
         uint length = Nodes.length;
         for(uint i = 0; i < length; i++){
             if(Nodes[i].addr == msg.sender){
                 Nodes[i].ability = ability;
             }
+        }
+        if(_manager_flag){
+            Nodes[2].ability = Nodes[2].ability / 100;
+            Nodes[3].ability = Nodes[3].ability / 100;
         }
     }
 

@@ -21,6 +21,8 @@ npm run async-start-2 —— 2个节点并行
 ```
 
 ## tips
+```
 `truffle migrate --reset`可重新部署合约
 `solidity`不支持网络编程
 遇事不决，重新部署试试
+```

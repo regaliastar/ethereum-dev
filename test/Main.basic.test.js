@@ -231,7 +231,7 @@ contract("Main.basic", accounts => {
         let successTaskNumber
         const excepted = matrixLength*10
         let maxLoop = 55 // 防止无限循环
-
+        /*
         while (maxLoop--){
             const task0 = test_no_better_cnp_manager(meta, organizer, 0)
             const task1 = test_no_better_cnp_manager(meta, participant_1, 1)
@@ -248,6 +248,7 @@ contract("Main.basic", accounts => {
         console.log("maxLoop: "+maxLoop)
         console.log('successTaskNumber: '+successTaskNumber.toNumber())
         assert.equal(successTaskNumber, excepted, 'successTaskNumber error!')
+        */
     })
 
 /*
