@@ -1,27 +1,28 @@
 /*
 * 数据记录
+* date: 2019/3/23
 * 4并行 20任务：19195 —— truffle test
+*
 * 实验一（4并行，（false, true）vs（true, true））：
-* 20任务 不优化，老实节点(false, true)：20655
-* 50任务 不优化，老实节点(false, true)：66173  49094
-* 50任务   优化，老实节点(true, true)：
-* 100任务 不优化，老实节点(false, true)：108626    114914
-* 100任务   优化，老实节点(true, true)：
-* 150任务 不优化，老实节点(false, true)：185095
-* 150任务   优化，老实节点(true, true)：
-* 200任务 不优化，老实节点(false, true)：259899
-* 200任务   优化，老实节点(true, true)：
+* 50任务 不优化，老实节点(false, true)：55094
+* 50任务   优化，老实节点(true, true)：54932
+* 100任务 不优化，老实节点(false, true)：104914
+* 100任务   优化，老实节点(true, true)：90941
+* 150任务 不优化，老实节点(false, true)：158476
+* 150任务   优化，老实节点(true, true)：156932
+* 200任务 不优化，老实节点(false, true)：203867
+* 200任务   优化，老实节点(true, true)：201743
 *
 * 实验二（4并行，（false, false）vs（true, false））：
 * 只修改两个诚实节点，两个欺骗节点
-* 50任务 不优化，欺骗节点(false, false)：76705 49995
-* 50任务   优化，欺骗节点(true, false)：       56726
-* 100任务 不优化，欺骗节点(false, false)：145109   117421
-* 100任务   优化，欺骗节点(true, false)：          114597
-* 150任务 不优化，欺骗节点(false, false)：227681
-* 150任务   优化，欺骗节点(true, false)：
-* 200任务 不优化，欺骗节点(false, false)：273717
-* 200任务   优化，欺骗节点(true, false)：
+* 50任务 不优化，欺骗节点(false, false)：56726
+* 50任务   优化，欺骗节点(true, false)：55412
+* 100任务 不优化，欺骗节点(false, false)：117421
+* 100任务   优化，欺骗节点(true, false)：114597
+* 150任务 不优化，欺骗节点(false, false)：173741
+* 150任务   优化，欺骗节点(true, false)： 163948
+* 200任务 不优化，欺骗节点(false, false)：236907
+* 200任务   优化，欺骗节点(true, false)：220110
 *
 * */
 
@@ -147,7 +148,7 @@ async function applyTask(_manager_flag, _contractor_flag){
 module.exports = async function(_address, _nodeIndex, _manager_flag, _contractor_flag) {
     init(_address, _nodeIndex)
     await connect(_manager_flag, _contractor_flag)
-    const totalTaskNumber = 100
+    const totalTaskNumber = 150
     let maxLoop = totalTaskNumber + 1 // 防止无限循环
     let flag = false
     let successTaskNumber = 0
