@@ -1,0 +1,124 @@
+<html>
+<head>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="js/watcher.js"></script>
+    <script type="text/javascript" src="js/bootstrap-switch.min.js"></script>
+    <script type="text/javascript" src="js/web3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/form.css"  />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.css"  />
+</head>
+<style>
+    .marg{
+        margin-top: 20px;
+    }
+    .clear{
+        clear: both;
+    }
+</style>
+<body>
+    <div class="container">
+        <div class="card-panel">
+            <div class="section">
+                <div>
+                    <h5><p id="title">实验监控平台</p></h5>
+                    <div class="divider"></div>
+                </div>
+
+                <div>
+                    <h6 class="marg"><p>当前参与节点数：  4</p></h6>
+                    <h6 class="marg" id="address"><p>地址： </p></h6>
+                    <div class="divider"></div>
+                </div>
+
+                <div>
+                    <h5 class="marg"><p>环境配置</p></h5>
+                    <div class="marg" style="float: left">
+                        <h6 ><p>优化算法</p></h6>
+                        <div class="switch">
+                            <input type="checkbox" name="my-checkbox" checked />
+                        </div>
+                    </div>
+                    <div class="marg" style="float: left; margin-left: 50px">
+                        <h6 ><p>诚实环境</p></h6>
+                        <div class="switch">
+                            <input type="checkbox" name="my-checkbox" checked />
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="divider" class="marg"></div>
+                </div>
+
+                <div>
+                    <h5 class="marg"><p>分配情况</p></h5>
+                    <h6 class="marg" id="totalTask"><p>总任务： 100</p></h6>
+                    <h6 class="marg" id="progress_number"><p>执行进度： 40%</p></h6>
+                    <div class="progress">
+                        <div id = "progress-bar" class="progress-bar" role="progressbar" aria-valuenow="60"
+                             aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
+                            <span class="sr-only">40% 完成</span>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                </div>
+
+                <div>
+                    <h5 class="marg"><p>运行结果</p></h5>
+                    <h6 class="marg" id="last_time"><p>已执行时间： 113967ms</p></h6>
+                    <div class="divider"></div>
+                </div>
+
+                <div>
+                    <input  class="btn btn-large waves-effect waves-light marg" type="button" id="save_data" value="保存数据"></input>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+        // init网页页面
+        const address = load_address()
+        for(let i = 0; i < address.length; i++){
+            let html_address = '<h6><li>'+address[i]+'</li></h6>'
+            $('#address').append(html_address)
+        }
+        $("[name='my-checkbox']").bootstrapSwitch()
+
+        const web3 = connect()
+        const contractInstance = getInstance(web3)
+        const totalTask = 100
+        const begin = new Date()
+        // 设置定时器循环更新区块链内容
+        let maxLoop = 300   // 最大请求次数
+        function update_state() {
+            maxLoop--
+            if(!maxLoop){
+                $('#save_data').click()
+            }
+            let successTaskNumber = getSuccessTaskNumber(contractInstance)
+            if(successTaskNumber > totalTask){
+                successTaskNumber = totalTask
+            }
+            // 更新进度条
+            let progress = (successTaskNumber/totalTask)*100
+            progress = Math.floor(progress)
+            document.getElementById('progress_number').innerHTML = "<p>执行进度： "+progress+"%</p>"
+            document.getElementById('progress-bar').style.width = progress+'%'
+            if(successTaskNumber > totalTask){
+                $('#save_data').click()
+            }
+            // 更新已执行时间
+            let now = new Date()
+            let last_time = now - begin
+            document.getElementById('last_time').innerHTML = "<p>已执行时间： "+last_time+"ms</p>"
+        }
+
+        const loop = setInterval(update_state, 1000)
+        $('#save_data').on('click', function () {
+            window.clearInterval(loop)
+            alert('clearInterval')
+        })
+    })
+</script>
+</html>

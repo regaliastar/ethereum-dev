@@ -148,7 +148,7 @@ async function applyTask(_manager_flag, _contractor_flag){
 module.exports = async function(_address, _nodeIndex, _manager_flag, _contractor_flag) {
     init(_address, _nodeIndex)
     await connect(_manager_flag, _contractor_flag)
-    const totalTaskNumber = 50
+    const totalTaskNumber = 100
     let maxLoop = totalTaskNumber + 1 // 防止无限循环
     let flag = false
     let successTaskNumber = 0
