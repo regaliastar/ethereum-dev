@@ -7,7 +7,7 @@
 * 50任务 不优化，老实节点(false, true)：55094
 * 50任务   优化，老实节点(true, true)：54932
 * 100任务 不优化，老实节点(false, true)：104914
-* 100任务   优化，老实节点(true, true)：90941
+* 100任务   优化，老实节点(true, true)：99941
 * 150任务 不优化，老实节点(false, true)：158476
 * 150任务   优化，老实节点(true, true)：156932
 * 200任务 不优化，老实节点(false, true)：203867
@@ -148,7 +148,7 @@ async function applyTask(_manager_flag, _contractor_flag){
 module.exports = async function(_address, _nodeIndex, _manager_flag, _contractor_flag) {
     init(_address, _nodeIndex)
     await connect(_manager_flag, _contractor_flag)
-    const totalTaskNumber = 150
+    const totalTaskNumber = 50
     let maxLoop = totalTaskNumber + 1 // 防止无限循环
     let flag = false
     let successTaskNumber = 0
