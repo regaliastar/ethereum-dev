@@ -25,9 +25,11 @@
 * 200任务   优化，欺骗节点(true, false)：220110
 *
 * 机器学习任务
-* 10 —— 190665 ms
+* 10, async-start-4  67797+26589=94386 ms
+* 对照,              185693 ms
 * */
 const execSync = require('child_process').execSync
+const exec = require('child_process').exec
 const Web3 = require('web3')
 const contractABI = require('./abi')()
 const contractAddress = '0x56fa63A87c4a54265Ff22aF8717D48B2EC53883c'
@@ -117,8 +119,14 @@ function execTask(){
     }
     arr.sort()
     */
-    const output = execSync('python ml.py')
-    console.log(output.toString())
+    // const output = execSync('python ml.py')
+    // console.log(output.toString())
+    exec('python ml.py', function (err, stdout, stderr) {
+        if(err){
+            console.log(err)
+        }
+        console.log(stdout)
+    })
 }
 
 function init(_address, _nodeIndex){

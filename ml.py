@@ -11,10 +11,10 @@ import time
 from sklearn.datasets import load_boston
 from sklearn.datasets import make_regression
 
-
+t0 = time.time()
 data = pd.read_csv("kc_house_data.csv")
 print('data length: ',len(data))
-t0 = time.time()
+
 
 reg = LinearRegression()
 labels = data['price']
@@ -32,4 +32,4 @@ clf.fit(x_train, y_train)
 accuracy = clf.score(x_test,y_test)	# 91.9%, time:11.5s
 
 print("accuracy: ", accuracy * 100, "%")
-print("time: ",time.time() - t0)
+print("time: ",time.time() - t0)    # 单位秒
