@@ -24,8 +24,10 @@
 * 200任务 不优化，欺骗节点(false, false)：236907
 * 200任务   优化，欺骗节点(true, false)：220110
 *
+* 机器学习任务
+* 10 —— 190665 ms
 * */
-
+const execSync = require('child_process').execSync
 const Web3 = require('web3')
 const contractABI = require('./abi')()
 const contractAddress = '0x56fa63A87c4a54265Ff22aF8717D48B2EC53883c'
@@ -105,15 +107,20 @@ async function testTaskUnit(_manager_flag, _contractor_flag) {
     await contractInstance.setAbility(ability, _manager_flag, {from: defaultAddress})
 }
 
-// 单元任务——快速排序
+// 单元任务
 function execTask(){
+    /*
     const k = 1000
     let arr = []
     for(let i = 0; i < k; i++){
         arr.push(Math.random())
     }
     arr.sort()
+    */
+    const output = execSync('python ml.py')
+    console.log(output.toString())
 }
+
 function init(_address, _nodeIndex){
     defaultAddress = _address
     defaultNodeIndex = _nodeIndex
@@ -148,7 +155,7 @@ async function applyTask(_manager_flag, _contractor_flag){
 module.exports = async function(_address, _nodeIndex, _manager_flag, _contractor_flag) {
     init(_address, _nodeIndex)
     await connect(_manager_flag, _contractor_flag)
-    const totalTaskNumber = 100
+    const totalTaskNumber = 10
     let maxLoop = totalTaskNumber + 1 // 防止无限循环
     let flag = false
     let successTaskNumber = 0
