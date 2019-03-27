@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 # % matplotlib inline
 from sklearn.linear_model import LogisticRegression
 from sklearn.externals import joblib
+import time
 
 ## DataFrame格式
 diabetesDF = pd.read_csv('cleaned.csv')
@@ -58,9 +59,21 @@ def splitTrain(num, totalTrain):
 	length = len(totalTrain)/num
 	i = 1
 	list = []
-	while i<=length:
+	while i <= length:
 		index = num*i
-		dfTrain = totalTrain[:index]
+		if i == 1:
+			dfTrain = totalTrain[index:]
+		elif i == length:
+			index = index - num
+			dfTrain = totalTrain[:index]
+		else:
+			df1 = totalTrain[index:]
+			index_temp = index - num
+			df2 = totalTrain[:index_temp]
+			df1.append(df2)
+			dfTrain = df1
+			# print(type(dfTrain))
+			# print(len(dfTrain))
 		trainLabel = np.asarray(dfTrain['Outcome'])
 		trainData = np.asarray(dfTrain.drop('Outcome',1))
 		means = np.mean(trainData, axis=0)
@@ -70,9 +83,10 @@ def splitTrain(num, totalTrain):
 		i=i+1
 	return list
 
-num = 100
-modelCount = 700/num
-dfTrain = diabetesDF[:700]
+t0 = time.time()
+num = 75
+modelCount = 750/num
+dfTrain = diabetesDF[:750]
 dfTrainList = splitTrain(num, dfTrain)
 dfTest = diabetesDF[700:]
 
@@ -118,6 +132,8 @@ accuracy = joblib_model.score(testData, testLabel)
 print(joblib_model.coef_)
 print("平均model accuracy = ", accuracy * 100, "%")
 
+print("时间: ",time.time() - t0)
+'''
 # 对照
 # 开始机器学习
 print("直接训练全部数据")
@@ -127,6 +143,7 @@ print(diabetesCheck.coef_)
 accuracy = diabetesCheck.score(testData, testLabel)
 print("accuracy = ", accuracy * 100, "%")
 print("###############")
+'''
 
 # TODO
 # 试试过拟合，将数据集再细分，并且有重合发生

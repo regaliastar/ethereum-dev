@@ -5,9 +5,12 @@ import matplotlib.pyplot as plt
 # % matplotlib inline
 from sklearn.linear_model import LogisticRegression
 from sklearn.externals import joblib
+from sklearn.model_selection import train_test_split
+from sklearn import ensemble
+import time
 
 ## DataFrame格式
-diabetesDF = pd.read_csv('diabetes_brash.csv')
+diabetesDF = pd.read_csv('cleaned.csv')
 
 # corr = diabetesDF.corr()
 # print(corr)
@@ -15,6 +18,7 @@ diabetesDF = pd.read_csv('diabetes_brash.csv')
 #          xticklabels=corr.columns, 
 #          yticklabels=corr.columns)
 
+t0 = time.time()
 # 机器学习之前
 dfTrain = diabetesDF[:700]
 dfTest = diabetesDF[700:750]
@@ -34,12 +38,18 @@ testData = (testData - means)/stds
 
 # 开始机器学习
 diabetesCheck = LogisticRegression()
-diabetesCheck.fit(trainData, trainLabel)
+# diabetesCheck.fit(trainData, trainLabel)
+# accuracy = diabetesCheck.score(testData, testLabel)
+# print("accuracy = ", accuracy * 100, "%")
+# print(diabetesCheck.coef_)
 
-print(diabetesCheck.coef_)
+x_train , x_test , y_train , y_test = train_test_split(trainData , trainLabel , test_size = 0.10,random_state =2)
+clf = ensemble.GradientBoostingRegressor(n_estimators = 400, max_depth = 5, min_samples_split = 2,
+          learning_rate = 0.1, loss = 'ls')
+clf.fit(x_train, y_train)
+accuracy = clf.score(x_test,y_test)
+print("accuracy = ", accuracy * 100, "%")	# 7.3%
 
-accuracy = diabetesCheck.score(testData, testLabel)
-print("accuracy = ", accuracy * 100, "%")
-
+print("时间: ",time.time() - t0)
 # 保存模型
 # joblib.dump(diabetesCheck, 'diabeteseModel.pkl')
