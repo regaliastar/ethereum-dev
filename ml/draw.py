@@ -206,4 +206,4 @@ def five_six():
 	for x,y in enumerate(y1):
 		plt.text(x,y+500,y,ha='center')
 	plt.show()
-five_six()
+# five_six()
